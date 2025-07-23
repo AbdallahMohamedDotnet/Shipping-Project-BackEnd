@@ -15,10 +15,10 @@ using BL.Contracts;
 using DAL.Contracts;
 namespace BL.Repositories
 {
-    public class ShippingType : BaseServices<TbShippingType> , IShippingType
+    public class ShippingTypeServices : BaseServices<TbShippingType> , IShippingType
     {
 
-        public ShippingType(ITableRepository<TbShippingType> repo) : base(repo)
+        public ShippingTypeServices(ITableRepository<TbShippingType> repo) : base(repo)
         {
 
         }

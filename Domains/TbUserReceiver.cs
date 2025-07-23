@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domains;
 
-public partial class TbUserReceiver
+public partial class TbUserReceiver : BaseTable
 {
     public Guid Id { get; set; }
 
