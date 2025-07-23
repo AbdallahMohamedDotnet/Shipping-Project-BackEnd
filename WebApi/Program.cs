@@ -1,4 +1,12 @@
 
+using BL.Contracts;
+using BL.Repositories;
+using DAL;
+using DAL.Contracts;
+using DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 namespace WebApi
 {
     public class Program
@@ -7,8 +15,32 @@ namespace WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
+            var logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.MSSqlServer(
+            connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+            tableName: "Logs",
+            autoCreateSqlTable: true
+                )
+                 .CreateLogger();
+
+            // Add logging services
+            builder.Services.AddLogging();
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ShippingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<DbContext>(provider => provider.GetService<ShippingContext>());
+
+            builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
+            builder.Services.AddScoped<IShippingType, ShippingType>();
+
+
+
+
+            // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
