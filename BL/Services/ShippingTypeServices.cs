@@ -13,12 +13,14 @@ using System.Threading.Tasks;
 using Domains;
 using BL.Contracts;
 using DAL.Contracts;
+using BL.DTOConfiguration;
+using AutoMapper;
 namespace BL.Repositories
 {
-    public class ShippingTypeServices : BaseServices<TbShippingType> , IShippingType
+    public class ShippingTypeServices : BaseServices<TbShippingType,DTOShippingType> , IShippingType
     {
 
-        public ShippingTypeServices(ITableRepository<TbShippingType> repo) : base(repo)
+        public ShippingTypeServices(ITableRepository<TbShippingType> repo , IMapper mapper) : base(repo, mapper)
         {
 
         }

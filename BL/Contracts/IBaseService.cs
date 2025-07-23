@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace BL.Contracts
 {
-    public interface IBaseService<T>
+    public interface IBaseService<T,DTO>
     {
-        List<T> GetAll();
-        T GetById(Guid id);
-        bool Add(T entity, Guid UserID);
-        bool Update(T entity, Guid UserID);
+        List<DTO> GetAll();
+        DTO GetById(Guid id);
+        bool Add(DTO entity, Guid UserID);
+        bool Update(DTO entity, Guid UserID);
         bool ChangeState(Guid id, int state, Guid UserID);
     }
 }

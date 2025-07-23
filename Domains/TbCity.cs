@@ -5,7 +5,6 @@ namespace Domains;
 
 public partial class TbCity : BaseTable
 {
-    public Guid Id { get; set; }
 
     public string? CityAname { get; set; }
 
@@ -13,15 +12,6 @@ public partial class TbCity : BaseTable
 
     public Guid CountryId { get; set; }
 
-    public Guid? UpdatedBy { get; set; }
-
-    public int CurrentState { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public Guid CreatedBy { get; set; }
-
-    public DateTime? UpdatedDate { get; set; }
 
     public virtual TbCountry Country { get; set; } = null!;
 

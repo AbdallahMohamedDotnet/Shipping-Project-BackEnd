@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Domains;
-
-public partial class TbShippment : BaseTable
+using Domains;
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
+public partial class DTOShippment : BaseDTO
 {
-
 
     public DateTime ShippingDate { get; set; }
 
@@ -36,14 +35,4 @@ public partial class TbShippment : BaseTable
     public Guid? ReferenceId { get; set; }
 
 
-
-    public virtual TbPaymentMethod? PaymentMethod { get; set; }
-
-    public virtual TbUserReceiver Receiver { get; set; } = null!;
-
-    public virtual TbUserSebder Sender { get; set; } = null!;
-
-    public virtual TbShippingType ShippingType { get; set; } = null!;
-
-    public virtual ICollection<TbShippmentStatus> TbShippmentStatuses { get; set; } = new List<TbShippmentStatus>();
 }

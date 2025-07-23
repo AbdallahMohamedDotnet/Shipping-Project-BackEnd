@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
 
-namespace Domains;
-
-public partial class TbUserReceiver : BaseTable
+public partial class DTOUserSebder : BaseDTO
 {
 
 
     public Guid UserId { get; set; }
 
-    public string ReceiverName { get; set; } = null!;
+    public string SenderName { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 
@@ -20,8 +20,4 @@ public partial class TbUserReceiver : BaseTable
     public string Address { get; set; } = null!;
 
 
-
-    public virtual TbCity City { get; set; } = null!;
-
-    public virtual ICollection<TbShippment> TbShippments { get; set; } = new List<TbShippment>();
 }

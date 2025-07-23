@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BL.DTOConfiguration;
 using Domains;
 namespace BL.Contracts
 {
-    public interface IShippingType
+    public interface IShippingType : IBaseService<TbShippingType, DTOShippingType>
     {
         List<TbShippingType> GetAll();
         TbShippingType GetById(Guid id);

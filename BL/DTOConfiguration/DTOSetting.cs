@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Domains;
-
-public partial class TbSetting : BaseTable
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
+public partial class DTOSetting : BaseDTO
 {
 
 

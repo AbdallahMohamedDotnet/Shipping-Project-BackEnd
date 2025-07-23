@@ -19,16 +19,6 @@ public partial class TbUserSebder : BaseTable
 
     public string Address { get; set; } = null!;
 
-    public Guid? UpdatedBy { get; set; }
-
-    public int CurrentState { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public Guid CreatedBy { get; set; }
-
-    public DateTime? UpdatedDate { get; set; }
-
     public virtual TbCity City { get; set; } = null!;
 
     public virtual ICollection<TbShippment> TbShippments { get; set; } = new List<TbShippment>();

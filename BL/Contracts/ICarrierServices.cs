@@ -1,4 +1,5 @@
-﻿using Domains;
+﻿using BL.DTOConfiguration;
+using Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BL.Contracts
 {
-    public interface ICarrierServices
+    public interface ICarrierServices : IBaseService<TbCarrier, DTOCarrier>
     {
         List<TbCarrier> GetAll();
         TbCarrier GetById(Guid id);

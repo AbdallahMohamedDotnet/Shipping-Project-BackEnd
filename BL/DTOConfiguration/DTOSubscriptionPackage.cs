@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Domains;
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
 
-namespace Domains;
-
-public partial class TbSubscriptionPackage : BaseTable
+public partial class DTOSubscriptionPackage : BaseDTO
 {
 
 
@@ -16,6 +17,4 @@ public partial class TbSubscriptionPackage : BaseTable
     public double TotalWeight { get; set; }
 
 
-
-    public virtual ICollection<TbUserSubscription> TbUserSubscriptions { get; set; } = new List<TbUserSubscription>();
 }

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
 
-namespace Domains;
-
-public partial class TbCountry : BaseTable
+public partial class DTOCountry : BaseDTO
 {
+
 
     public string? CountryAname { get; set; }
 
     public string? CountryEname { get; set; }
 
 
-
-    public virtual ICollection<TbCity> TbCities { get; set; } = new List<TbCity>();
 }

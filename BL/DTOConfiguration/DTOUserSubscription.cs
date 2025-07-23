@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using BL.DTOConfiguration.Base;
+namespace BL.DTOConfiguration;
 
-namespace Domains;
-
-public partial class TbUserSubscription : BaseTable
+public partial class DTOUserSubscription : BaseDTO
 {
-
 
     public Guid UserId { get; set; }
 
     public Guid PackageId { get; set; }
 
     public DateTime SubscriptionDate { get; set; }
-    public virtual TbSubscriptionPackage Package { get; set; } = null!;
+
 }

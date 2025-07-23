@@ -35,7 +35,7 @@ namespace WebApi
             builder.Services.AddScoped<DbContext>(provider => provider.GetService<ShippingContext>());
 
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
-            builder.Services.AddScoped<IShippingType, ShippingType>();
+            builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
 
 
 
