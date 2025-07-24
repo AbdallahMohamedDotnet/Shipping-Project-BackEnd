@@ -6,13 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using BL.Contracts;
 using DAL.Contracts;
-namespace BL.Repositories
-{
-    public class CountryServices : BaseServices<TbCountry>, ICountry
-    {
-        public CountryServices(ITableRepository<TbCountry> repo) : base(repo)
-        {
+using BL.DTOConfiguration;
+using AutoMapper;
 
+namespace BL.Services
+{
+    public class CountryServices : BaseServices<TbCountry, DTOCountry>, ICountry
+    {
+        public CountryServices(ITableRepository<TbCountry> repo, IMapper mapper) : base(repo, mapper)
+        {
         }
     }
 }

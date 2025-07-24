@@ -10,11 +10,7 @@ namespace BL.Contracts
 {
     public interface ICarrierServices : IBaseService<TbCarrier, DTOCarrier>
     {
-        List<TbCarrier> GetAll();
-        TbCarrier GetById(Guid id);
-        bool Add(TbCarrier entity, Guid UserID);
-        bool Update(TbCarrier entity, Guid UserID);
-        bool ChangeState(Guid id, int state, Guid UserID);
-
+        // This interface inherits all methods from IBaseService
+        // Add carrier-specific methods here if needed in the future
     }
 }

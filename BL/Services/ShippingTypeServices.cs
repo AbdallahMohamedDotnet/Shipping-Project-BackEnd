@@ -1,5 +1,4 @@
-﻿
-using DAL.Exceptions;
+﻿using DAL.Exceptions;
 using DAL.Repositories;
 using Domains;
 using Microsoft.EntityFrameworkCore;
@@ -10,21 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domains;
 using BL.Contracts;
 using DAL.Contracts;
 using BL.DTOConfiguration;
 using AutoMapper;
-namespace BL.Repositories
+
+namespace BL.Services
 {
-    public class ShippingTypeServices : BaseServices<TbShippingType,DTOShippingType> , IShippingType
+    public class ShippingTypeServices : BaseServices<TbShippingType, DTOShippingType>, IShippingType
     {
-
-        public ShippingTypeServices(ITableRepository<TbShippingType> repo , IMapper mapper) : base(repo, mapper)
+        public ShippingTypeServices(ITableRepository<TbShippingType> repo, IMapper mapper) : base(repo, mapper)
         {
-
         }
     }
-
-
 }

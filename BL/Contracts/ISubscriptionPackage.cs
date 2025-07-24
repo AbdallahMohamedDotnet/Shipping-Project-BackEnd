@@ -1,4 +1,5 @@
-﻿using Domains;
+﻿using BL.DTOConfiguration;
+using Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace BL.Contracts
 {
-    public interface ISubscriptionPackage 
+    public interface ISubscriptionPackage : IBaseService<TbSubscriptionPackage, DTOSubscriptionPackage>
     {
-        List<TbSubscriptionPackage> GetAll();
-        TbSubscriptionPackage GetById(Guid id);
-        bool Add(TbSubscriptionPackage entity, Guid UserID);
-        bool Update(TbSubscriptionPackage entity, Guid UserID);
-        bool ChangeState(Guid id, int state, Guid UserID);
+
     }
 }

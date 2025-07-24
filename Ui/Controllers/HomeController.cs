@@ -1,20 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Ui.Models;
+using BL.Services;
+using BL.Contracts;
 
 namespace Ui.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ICity _city;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICity city, ILogger<HomeController> logger)
         {
+            _city = city;
             _logger = logger;
+           
         }
 
         public IActionResult Index()
         {
+            _city.GetAll();
             return View();
         }
 

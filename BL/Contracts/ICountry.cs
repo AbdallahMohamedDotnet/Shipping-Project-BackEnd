@@ -1,4 +1,5 @@
-﻿using Domains;
+﻿using BL.DTOConfiguration;
+using Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace BL.Contracts
 {
-    public interface ICountry 
+    public interface ICountry : IBaseService<TbCountry, DTOCountry>
     {
-        List<TbCountry> GetAll();
-        TbCountry GetById(Guid id);
-        bool Add(TbCountry entity, Guid UserID);
-        bool Update(TbCountry entity, Guid UserID);
-        bool ChangeState(Guid id, int state, Guid UserID);
+
     }
 }

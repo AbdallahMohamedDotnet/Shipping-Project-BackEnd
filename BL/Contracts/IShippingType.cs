@@ -5,16 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using BL.DTOConfiguration;
 using Domains;
+
 namespace BL.Contracts
 {
     public interface IShippingType : IBaseService<TbShippingType, DTOShippingType>
     {
-        List<TbShippingType> GetAll();
-        TbShippingType GetById(Guid id);
-        bool Add(TbShippingType entity , Guid UserID);
-        bool Update(TbShippingType entity , Guid UserID);
-        bool ChangeState(Guid id, int state , Guid UserID);
-
+        // This interface inherits all methods from IBaseService
+        // Add shipping type-specific methods here if needed in the future
     }
-
 }

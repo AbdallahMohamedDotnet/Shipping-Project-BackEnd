@@ -1,4 +1,5 @@
-﻿using Domains;
+﻿using BL.DTOConfiguration;
+using Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace BL.Contracts
 {
-    public interface ISetting
+    public interface ISetting : IBaseService<TbSetting, DTOSetting>
     {
-        List<TbSetting> GetAll();
-        TbSetting GetById(Guid id);
-        bool Add(TbSetting entity, Guid UserID);
-        bool Update(TbSetting entity, Guid UserID);
-        bool ChangeState(Guid id, int state, Guid UserID);
+
     }
 }

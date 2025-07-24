@@ -1,5 +1,6 @@
 using BL.Contracts;
-using BL.Repositories;
+using BL;
+using BL.Services;
 using DAL;
 using DAL.Contracts;
 using DAL.Repositories;
@@ -24,6 +25,10 @@ namespace Ui
 
             // Add logging services
             builder.Services.AddLogging();
+            
+            // Add AutoMapper
+            builder.Services.AddAutoMapper(typeof(Program));
+            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ShippingContext>(options =>
@@ -33,8 +38,7 @@ namespace Ui
 
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
             builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
-
-
+            builder.Services.AddScoped<ICity, CityServices>(); // Assuming you have a CityServices implementation
 
             var app = builder.Build();
 

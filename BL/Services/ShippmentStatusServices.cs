@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace BL.Repositories
+using BL.DTOConfiguration;
+using AutoMapper;
+namespace BL.Services
 {
-    public class ShippmentStatusServices : BaseServices<Domains.TbShippmentStatus>, Contracts.IShippmentStatus
+    public class ShippmentStatusServices : BaseServices<Domains.TbShippmentStatus , DTOShippmentStatus>, Contracts.IShippmentStatus
     {
-        public ShippmentStatusServices(ITableRepository<TbShippmentStatus> repo) : base(repo)
+        public ShippmentStatusServices(ITableRepository<TbShippmentStatus> repo , IMapper Mapper) : base(repo, Mapper)
         {
             
         }
