@@ -1,5 +1,6 @@
-using BL.Contracts;
 using BL;
+using BL.Contracts;
+using BL.Mapping;
 using BL.Services;
 using DAL;
 using DAL.Contracts;
@@ -14,34 +15,12 @@ namespace Ui
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.MSSqlServer(
-            connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-            tableName: "Logs",
-            autoCreateSqlTable: true
-                )
-                 .CreateLogger();
-
-            // Add logging services
-            builder.Services.AddLogging();
             
-            // Add AutoMapper
-            builder.Services.AddAutoMapper(typeof(Program));
+            // Register services BEFORE building the application
+            RegisterServicesHelper.RegisterServices(builder);       
             
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<ShippingContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Services.AddScoped<DbContext>(provider => provider.GetService<ShippingContext>());
-
-            builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
-            builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
-            builder.Services.AddScoped<ICity, CityServices>(); // Assuming you have a CityServices implementation
-
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -52,7 +31,7 @@ namespace Ui
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+    
             app.UseRouting();
 
             app.UseAuthorization();

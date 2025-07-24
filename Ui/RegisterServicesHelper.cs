@@ -1,6 +1,6 @@
-using BL.Contracts;
-using BL.Services;
+﻿using BL.Contracts;
 using BL.Mapping;
+using BL.Services;
 using DAL;
 using DAL.Contracts;
 using DAL.Repositories;
@@ -8,14 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 
-namespace WebApi
+namespace Ui
 {
-    public class Program
+    public class RegisterServicesHelper
     {
-        public static void Main(string[] args)
+        public static void RegisterServices(WebApplicationBuilder builder)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
             // Configure Serilog with modern syntax
             var logger = new LoggerConfiguration()
                 .WriteTo.Console()
@@ -31,6 +29,9 @@ namespace WebApi
             // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
+            // Add services to the container
+            builder.Services.AddControllersWithViews();
+            
             // Add Entity Framework DbContext
             builder.Services.AddDbContext<ShippingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,28 +42,19 @@ namespace WebApi
             // Register generic repository
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
 
-            // Register business logic services
+            // Register all business logic services
+            builder.Services.AddScoped<ICarrierServices, CarrierServices>();
+            builder.Services.AddScoped<ICity, CityServices>();
+            builder.Services.AddScoped<ICountry, CountryServices>();
+            builder.Services.AddScoped<IPaymentMethodServices, PaymentMethodServices>();
+            builder.Services.AddScoped<ISetting, SettingServices>();
             builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
-
-            // Add API services
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
-
-            app.Run();
-        }
+            builder.Services.AddScoped<IShippment, ShippmentServices>();
+            builder.Services.AddScoped<IShippmentStatus, ShippmentStatusServices>();
+            builder.Services.AddScoped<ISubscriptionPackage, SubscriptionPackageServices>();
+            builder.Services.AddScoped<IUserReceiver, UserReceiverServices>();
+            builder.Services.AddScoped<IUserSebder, UserSebderServices>();
+            builder.Services.AddScoped<IUserSubscription, UserSubscriptionServices>();
+        }   
     }
 }
