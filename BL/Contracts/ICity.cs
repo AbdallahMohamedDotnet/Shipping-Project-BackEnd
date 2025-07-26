@@ -11,5 +11,7 @@ namespace BL.Contracts
     public interface ICity : IBaseService<TbCity, DTOCity>
     {
 
+    
+
     }
 }

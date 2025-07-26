@@ -24,12 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppResources\AppResources.csproj" />
     <ProjectReference Include="..\BL\BL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\admin\Controllers\" />
-    <Folder Include="Areas\admin\Views\" />
   </ItemGroup>
 
 </Project>

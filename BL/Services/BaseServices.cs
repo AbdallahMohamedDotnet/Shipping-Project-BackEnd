@@ -2,6 +2,7 @@
 using BL.Contracts;
 using DAL.Contracts;
 using Domains;
+using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,30 +34,27 @@ namespace BL.Services
             return mapper.Map<DTO>(entity);
         }
 
-        public bool Add(DTO entity, Guid UserID)
+        public bool Add(DTO entity)
         {
             var dbobject = mapper.Map<T>(entity);
-            dbobject.CreatedBy = UserID;
+            
             dbobject.CreatedDate = DateTime.Now;
             dbobject.CurrentState = 1; // Active by default
             return repo.Add(dbobject);
         }
 
-        public bool Update(DTO entity, Guid UserID)
+        public bool Update(DTO entity)
         {
             var dbobject = mapper.Map<T>(entity);
-            dbobject.UpdatedBy = UserID;
+            
             dbobject.UpdatedDate = DateTime.Now;
             return repo.Update(dbobject);
+            
         }
-
-        public bool ChangeState(Guid id, int state, Guid UserID)
+        
+        public bool ChangeStatus(Guid id, int status = 1)
         {
-            return repo.ChangeState(id, state);
+            return repo.ChangeState(id , status);
         }
     }
 }
-
-
-
-
