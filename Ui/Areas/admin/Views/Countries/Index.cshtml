@@ -1,0 +1,203 @@
+﻿@model List<DTOCountry>
+@{
+    ViewData["Title"] = "Countries Management";
+}
+
+@section Styles
+{
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="~/admin/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <!-- End plugin css for this page -->
+}
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">@Labels.Countries</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@Labels.Countries</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Data table</li>
+            </ol>
+        </nav>
+    </div>
+    
+    @* Display success messages *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <a href="/admin/Countries/Edit" class="btn btn-success btn-fw mb-3">
+                        <i class="mdi mdi-plus"></i> @Actions.AddNew
+                    </a>
+                </div>
+                <div class="col-12">
+                    <table id="order-listing" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>@Labels.NameAr</th>
+                                <th>@Labels.NameEn</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th>@Labels.Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var country in Model)
+                            {
+                                <tr>
+                                    <td>@country.CountryAname</td>
+                                    <td>@country.CountryEname</td>
+                                    <td>
+                                        @if (country.CurrentState == 1)
+                                        {
+                                            <span class="badge badge-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>@country.CreatedDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="/admin/Countries/Edit/@country.Id" class="btn btn-info btn-sm">
+                                                <i class="mdi mdi-pencil"></i> @Actions.Edit
+                                            </a>
+                                            @if (country.CurrentState == 1)
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm" 
+                                                        data-id="@country.Id" 
+                                                        data-name="@country.CountryEname"
+                                                        onclick="confirmDelete(this)">
+                                                    <i class="mdi mdi-delete"></i> @Actions.Delete
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <!-- plugins:js -->
+    <script src="~/Admin/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="~/Admin/vendors/datatables.net/jquery.dataTables.js"></script>
+    <script src="~/Admin/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page -->
+    <script src="~/Admin/js/data-table.js"></script>
+    <!-- End custom js for this page -->
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#order-listing').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "columnDefs": [
+                    { "orderable": false, "targets": 4 } // Disable sorting on actions column
+                ]
+            });
+        });
+
+        function confirmDelete(button) {
+            var id = $(button).data('id');
+            var name = $(button).data('name');
+            var deleteUrl = '/admin/Countries/Delete';
+
+            if (typeof alert !== 'undefined' && alert.ConfirmDelete) {
+                // Use custom alert if available
+                alert.ConfirmDelete(function (result) {
+                    if (result) {
+                        window.location.href = deleteUrl + '/' + id;
+                    }
+                });
+            } else {
+                // Fallback to browser confirm
+                if (confirm('Are you sure you want to delete "' + name + '"? This action cannot be undone.')) {
+                    window.location.href = deleteUrl + '/' + id;
+                }
+            }
+        }
+    </script>
+
+    @* Display message types *@
+    @if (TempData["MessageType"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                let messageType = @TempData["MessageType"];
+                console.log('MessageType:', messageType);
+                
+                switch (messageType) {
+                    case 1: // SaveSuccess
+                        if (typeof alert !== 'undefined' && alert.Success) {
+                            alert.Success('@Messages.SaveSuccessTitle', '@Messages.SaveSuccessMessage');
+                        } else {
+                            showBootstrapAlert('success', 'Success', 'Country saved successfully!');
+                        }
+                        break;
+                    case 2: // SaveFailed
+                        if (typeof alert !== 'undefined' && alert.Error) {
+                            alert.Error('@Messages.SaveFailedTitle', '@Messages.SaveFailedMessage');
+                        } else {
+                            showBootstrapAlert('danger', 'Error', 'Failed to save country.');
+                        }
+                        break;
+                    case 3: // DeleteSuccess
+                        if (typeof alert !== 'undefined' && alert.Success) {
+                            alert.Success('@Messages.DeleteSuccessTitle', '@Messages.DeleteSucessMessage');
+                        } else {
+                            showBootstrapAlert('success', 'Success', 'Country deleted successfully!');
+                        }
+                        break;
+                    case 4: // DeleteFailed
+                        if (typeof alert !== 'undefined' && alert.Error) {
+                            alert.Error('@Messages.DeleteFailedTitle', '@Messages.DeleteFailedMessage');
+                        } else {
+                            showBootstrapAlert('danger', 'Error', 'Failed to delete country.');
+                        }
+                        break;
+                    default:
+                        console.log("Unknown message type");
+                        break;
+                }
+            });
+
+            function showBootstrapAlert(type, title, message) {
+                var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    '<strong>' + title + ':</strong> ' + message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                    '</div>';
+                
+                $('.content-wrapper').prepend(alertHtml);
+                
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
+            }
+        </script>
+    }
+}
+<!-- content-wrapper ends -->

@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Exceptions;
 using Microsoft.Extensions.Logging;
-using DAL;
-
 namespace DAL.Repositories
 {
     public class TableRepository<T> : ITableRepository<T> where T : BaseTable
@@ -17,7 +15,6 @@ namespace DAL.Repositories
         private readonly ShippingContext Context;
         private readonly DbSet<T> DbSet;
         private readonly ILogger<TableRepository<T>> Logger;
-        
         public TableRepository(ShippingContext context, ILogger<TableRepository<T>> log)
         {
             this.Context = context;
@@ -33,7 +30,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error retrieving all entities", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
 
@@ -45,7 +42,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, $"Error retrieving entity with ID: {id}", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
 
@@ -60,7 +57,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error adding entity", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
 
@@ -69,21 +66,17 @@ namespace DAL.Repositories
             try
             {
                 var dbData = GetById(entity.Id);
-                if (dbData == null)
-                    return false;
-
                 entity.CreatedDate = dbData.CreatedDate;
                 entity.CreatedBy = dbData.CreatedBy;
                 entity.UpdatedDate = DateTime.Now;
                 entity.CurrentState = dbData.CurrentState;
-                
                 Context.Entry(entity).State = EntityState.Modified;
                 Context.SaveChanges();
                 return true;
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error updating entity", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
 
@@ -102,7 +95,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error deleting entity", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
 
@@ -124,8 +117,9 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error changing entity status", Logger);
+                throw new DataAccessException(ex, "", Logger);
             }
         }
     }
+
 }

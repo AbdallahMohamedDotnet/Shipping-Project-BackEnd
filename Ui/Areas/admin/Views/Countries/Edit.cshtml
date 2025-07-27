@@ -1,0 +1,206 @@
+﻿@model DTOCountry
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Create Country" : "Edit Country";
+    bool isEdit = Model.Id != Guid.Empty;
+}
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">@Labels.Countries</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/Countries">@Labels.Countries</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(isEdit ? "Edit" : "Create")</li>
+            </ol>
+        </nav>
+    </div>
+
+    <form class="forms-sample" method="post" action="/admin/Countries/Save" role="form">
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">@(isEdit ? "Edit" : "Create") @Labels.Countries</h4>
+                        <p class="card-description">@(isEdit ? "Update country information" : "Enter new country information")</p>
+
+                        @* Show validation summary if there are errors *@
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        @* Hidden fields for edit mode *@
+                        <input asp-for="Id" type="hidden" />
+                        @if (isEdit)
+                        {
+                            <input asp-for="CreatedBy" type="hidden" />
+                            <input asp-for="CreatedDate" type="hidden" />
+                            <input asp-for="CurrentState" type="hidden" />
+                            <input asp-for="UpdatedBy" type="hidden" />
+                            <input asp-for="UpdatedDate" type="hidden" />
+                        }
+
+                        <div class="form-group">
+                            <label asp-for="CountryAname">@Labels.NameAr <span class="text-danger">*</span></label>
+                            <input asp-for="CountryAname" type="text" class="form-control" placeholder="@Labels.NameAr" required />
+                            <span asp-validation-for="CountryAname" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CountryEname">@Labels.NameEn <span class="text-danger">*</span></label>
+                            <input asp-for="CountryEname" type="text" class="form-control" placeholder="@Labels.NameEn" required />
+                            <span asp-validation-for="CountryEname" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-gradient-primary me-2" id="saveBtn">
+                                <i class="mdi mdi-content-save"></i> @Actions.Save
+                            </button>
+                            <a href="/admin/Countries" class="btn btn-light">
+                                <i class="mdi mdi-cancel"></i> @Actions.Cancel
+                            </a>
+                            @if (isEdit)
+                            {
+                                <a href="/admin/Countries/Edit" class="btn btn-success">
+                                    <i class="mdi mdi-plus"></i> Create New
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <i class="mdi mdi-information"></i> Information
+                        </h4>
+                        
+                        <p><strong>Required Fields:</strong></p>
+                        <ul class="list-unstyled">
+                            <li><i class="mdi mdi-check text-success"></i> Arabic Name</li>
+                            <li><i class="mdi mdi-check text-success"></i> English Name</li>
+                        </ul>
+                        
+                        <hr>
+                        
+                        <p><strong>Guidelines:</strong></p>
+                        <ul class="list-unstyled">
+                            <li><i class="mdi mdi-lightbulb text-warning"></i> Use official country names</li>
+                            <li><i class="mdi mdi-lightbulb text-warning"></i> Check spelling carefully</li>
+                            <li><i class="mdi mdi-lightbulb text-warning"></i> Be consistent with naming</li>
+                        </ul>
+                        
+                        @if (isEdit)
+                        {
+                            <hr>
+                            <p><strong>Record Information:</strong></p>
+                            <ul class="list-unstyled">
+                                <li><i class="mdi mdi-calendar text-muted"></i> Created: @Model.CreatedDate.ToString("MMM dd, yyyy")</li>
+                                @if (Model.UpdatedDate.HasValue)
+                                {
+                                    <li><i class="mdi mdi-pencil text-muted"></i> Updated: @Model.UpdatedDate.Value.ToString("MMM dd, yyyy")</li>
+                                }
+                                <li><i class="mdi mdi-toggle-@(Model.CurrentState == 1 ? "switch" : "switch-off") text-@(Model.CurrentState == 1 ? "success" : "danger")"></i> Status: @(Model.CurrentState == 1 ? "Active" : "Inactive")</li>
+                            </ul>
+                        }
+                    </div>
+                </div>
+                
+                @if (!isEdit)
+                {
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <i class="mdi mdi-earth"></i> Examples
+                            </h4>
+                            
+                            <div class="alert alert-info">
+                                <p><strong>Arabic:</strong> المملكة العربية السعودية</p>
+                                <p><strong>English:</strong> Saudi Arabia</p>
+                            </div>
+                            
+                            <div class="alert alert-light">
+                                <p><strong>Arabic:</strong> الإمارات العربية المتحدة</p>
+                                <p><strong>English:</strong> United Arab Emirates</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Debug information
+            console.log('Countries Edit page loaded');
+            console.log('Form action:', $('form').attr('action'));
+            console.log('Antiforgery token:', $('input[name="__RequestVerificationToken"]').length > 0);
+            
+            // Show validation summary if there are errors
+            if ($('.field-validation-error').length > 0) {
+                $('.alert-danger').show();
+            }
+
+            // Real-time validation feedback
+            $('input[type="text"]').on('blur keyup', function() {
+                var $input = $(this);
+                var $validationSpan = $input.next('.text-danger');
+                
+                // Remove previous validation classes
+                $input.removeClass('is-invalid is-valid');
+                
+                // Check if field has validation errors
+                if ($validationSpan.length > 0 && $validationSpan.text().trim() !== '') {
+                    $input.addClass('is-invalid');
+                } else if ($input.val().trim() !== '') {
+                    $input.addClass('is-valid');
+                }
+            });
+
+            // Form submission handling
+            $('form').on('submit', function(e) {
+                console.log('Form submission started');
+                
+                var isValid = true;
+                var $form = $(this);
+                
+                // Check required fields
+                $('input[required]').each(function() {
+                    var $input = $(this);
+                    if ($input.val().trim() === '') {
+                        $input.addClass('is-invalid');
+                        isValid = false;
+                        console.log('Required field empty:', $input.attr('name'));
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('.alert-danger').show();
+                    $('html, body').animate({
+                        scrollTop: $('.alert-danger').offset().top - 100
+                    }, 500);
+                    console.log('Form validation failed');
+                    return false;
+                }
+                
+                // Show loading state
+                $('#saveBtn').prop('disabled', true).html('<i class="mdi mdi-loading mdi-spin"></i> Saving...');
+                console.log('Form submitted successfully');
+            });
+
+            // Auto-focus first input
+            $('input[type="text"]:first').focus();
+            
+            // Initialize tooltips if bootstrap is available
+            if (typeof $().tooltip === 'function') {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    </script>
+}

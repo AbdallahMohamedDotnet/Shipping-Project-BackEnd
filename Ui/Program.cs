@@ -36,10 +36,16 @@ namespace Ui
 
             app.UseAuthorization();
 
-            // Admin area route (must come first to have priority)
+            // Admin area route - MUST come first to have priority
             app.MapControllerRoute(
-                name: "admin",
-                pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+                name: "adminArea",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}",
+                constraints: new { area = "admin" });
+
+            // Generic area route for other areas
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             // Default route for non-area controllers
             app.MapControllerRoute(

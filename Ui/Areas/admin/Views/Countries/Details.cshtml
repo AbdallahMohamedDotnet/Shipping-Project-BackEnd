@@ -1,0 +1,148 @@
+@model DTOCountry
+@{
+    ViewData["Title"] = "Country Details";
+}
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">@Labels.Countries</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/Countries">@Labels.Countries</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="mdi mdi-earth"></i> Country Details
+                    </h4>
+                    
+                    <dl class="row">
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CountryAname)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.CountryAname)</dd>
+                        
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CountryEname)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.CountryEname)</dd>
+                        
+                        <dt class="col-sm-3">Status</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.CurrentState == 1)
+                            {
+                                <span class="badge badge-success">
+                                    <i class="mdi mdi-check-circle"></i> Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">
+                                    <i class="mdi mdi-close-circle"></i> Inactive
+                                </span>
+                            }
+                        </dd>
+                        
+                        <dt class="col-sm-3">Created Date</dt>
+                        <dd class="col-sm-9">@Model.CreatedDate.ToString("MMMM dd, yyyy 'at' hh:mm tt")</dd>
+                        
+                        @if (Model.UpdatedDate.HasValue)
+                        {
+                            <dt class="col-sm-3">Last Updated</dt>
+                            <dd class="col-sm-9">@Model.UpdatedDate.Value.ToString("MMMM dd, yyyy 'at' hh:mm tt")</dd>
+                        }
+                        
+                        <dt class="col-sm-3">ID</dt>
+                        <dd class="col-sm-9">
+                            <code>@Model.Id</code>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="mdi mdi-tools"></i> Actions
+                    </h4>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/admin/Countries/Edit/@Model.Id" class="btn btn-warning">
+                            <i class="mdi mdi-pencil"></i> Edit Country
+                        </a>
+                        
+                        <a href="/admin/Countries" class="btn btn-secondary">
+                            <i class="mdi mdi-arrow-left"></i> Back to List
+                        </a>
+                        
+                        @if (Model.CurrentState == 1)
+                        {
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('@Model.Id', '@Model.CountryEname')">
+                                <i class="mdi mdi-delete"></i> Delete Country
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-success" onclick="confirmReactivate('@Model.Id', '@Model.CountryEname')">
+                                <i class="mdi mdi-restore"></i> Reactivate Country
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="mdi mdi-information"></i> Information
+                    </h4>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Country Status:</strong></p>
+                        <p>This country is currently @(Model.CurrentState == 1 ? "active" : "inactive") in the system.</p>
+                        
+                        @if (Model.CurrentState == 1)
+                        {
+                            <p>Active countries can be assigned to cities and used throughout the system.</p>
+                        }
+                        else
+                        {
+                            <p>Inactive countries are hidden from most operations but can be reactivated if needed.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id, name) {
+            if (typeof alert !== 'undefined' && alert.ConfirmDelete) {
+                alert.ConfirmDelete(function (result) {
+                    if (result) {
+                        var deleteUrl = '/admin/Countries/Delete';
+                        window.location.href = deleteUrl + '/' + id;
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to delete "' + name + '"? This action cannot be undone.')) {
+                    var deleteUrl = '/admin/Countries/Delete';
+                    window.location.href = deleteUrl + '/' + id;
+                }
+            }
+        }
+        
+        function confirmReactivate(id, name) {
+            if (confirm('Are you sure you want to reactivate "' + name + '"?')) {
+                // Create form to reactivate (this would need a controller action)
+                alert('Reactivation feature needs to be implemented in the controller.');
+            }
+        }
+    </script>
+}
