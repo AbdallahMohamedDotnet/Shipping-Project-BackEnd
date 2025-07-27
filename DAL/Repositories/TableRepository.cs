@@ -1,127 +1,131 @@
 ﻿using DAL.Contracts;
+using Domains;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domains;
 using DAL.Exceptions;
 using Microsoft.Extensions.Logging;
+using DAL;
 
 namespace DAL.Repositories
 {
     public class TableRepository<T> : ITableRepository<T> where T : BaseTable
     {
-        private readonly DbContext context;
-        private readonly DbSet<T> dbSet;
+        private readonly ShippingContext Context;
+        private readonly DbSet<T> DbSet;
         private readonly ILogger<TableRepository<T>> Logger;
         
-        public TableRepository(DbContext context, ILogger<TableRepository<T>> logger)
+        public TableRepository(ShippingContext context, ILogger<TableRepository<T>> log)
         {
-            this.context = context;
-            this.dbSet = context.Set<T>();
-            this.Logger = logger;
+            this.Context = context;
+            this.DbSet = Context.Set<T>();
+            this.Logger = log;
         }
 
         public List<T> GetAll()
         {
             try
             {
-                return dbSet.ToList();
+                return DbSet.Where(a => a.CurrentState > 0).ToList();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                throw new DataAccessException(ex, "Error retrieving all entities in Getall()", Logger);
+                throw new DataAccessException(ex, "Error retrieving all entities", Logger);
             }
-
         }
+
         public T GetById(Guid id)
         {
             try
             {
-                return dbSet.Where(e => e.Id == id).FirstOrDefault();
+                return DbSet.Where(a => a.Id == id).AsNoTracking().FirstOrDefault();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.LogError($"Error retrieving entity by ID {id}: {ex.Message}");
-                throw new DataAccessException(ex, "Error retrieving entity by ID", Logger);
+                throw new DataAccessException(ex, $"Error retrieving entity with ID: {id}", Logger);
             }
         }
+
         public bool Add(T entity)
         {
             try
             {
                 entity.CreatedDate = DateTime.Now;
-                entity.CreatedBy = Guid.NewGuid(); // Assuming CreatedBy is set to a new Guid, replace with actual user ID if available
-                entity.UpdatedDate = null; // Initial creation does not have an updated date
-                entity.UpdatedBy = null; // Initial creation does not have an updated by user
-                dbSet.Add(entity);
-                return context.SaveChanges() > 0;
+                DbSet.Add(entity);
+                Context.SaveChanges();
+                return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.LogError($"Error adding entity: {ex.Message}");
                 throw new DataAccessException(ex, "Error adding entity", Logger);
             }
-
         }
-        public bool Update(T entity  )
+
+        public bool Update(T entity)
         {
             try
             {
-                var existingEntity = GetById(entity.Id);
-                if (existingEntity == null)
+                var dbData = GetById(entity.Id);
+                if (dbData == null)
                     return false;
-                entity.CreatedDate = existingEntity.CreatedDate; // Keep the original creation date
-                entity.UpdatedBy = new Guid();
-                entity.UpdatedDate = DateTime.Now; // Set the updated date to now
-                entity.UpdatedBy = null; // Assuming UpdatedBy is set to a new Guid, replace with actual user ID if available
-                context.Entry(existingEntity).State = EntityState.Modified; 
-                return context.SaveChanges() > 0;
+
+                entity.CreatedDate = dbData.CreatedDate;
+                entity.CreatedBy = dbData.CreatedBy;
+                entity.UpdatedDate = DateTime.Now;
+                entity.CurrentState = dbData.CurrentState;
+                
+                Context.Entry(entity).State = EntityState.Modified;
+                Context.SaveChanges();
+                return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.LogError($"Error updating entity: {ex.Message}");
                 throw new DataAccessException(ex, "Error updating entity", Logger);
             }
-
         }
+
         public bool Delete(Guid id)
         {
             try
             {
                 var entity = GetById(id);
-                if (entity == null)
-                    return false;
-                dbSet.Remove(entity);
-                return context.SaveChanges() > 0;
+                if (entity != null)
+                {
+                    DbSet.Remove(entity);
+                    Context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            catch (DataAccessException ex)
+            catch (Exception ex)
             {
-                Logger.LogError($"Error deleting entity with ID {id}: {ex.Message}");
                 throw new DataAccessException(ex, "Error deleting entity", Logger);
             }
         }
-        public bool ChangeState(Guid id, int state)
+
+        public bool ChangeStatus(Guid id, Guid userId, int status = 1)
         {
             try
             {
                 var entity = GetById(id);
-                if (entity == null)
-                    return false;
-
-                entity.CurrentState = state;
-                return true;
+                if (entity != null)
+                {
+                    entity.CurrentState = status;
+                    entity.UpdatedBy = userId;
+                    entity.UpdatedDate = DateTime.Now;
+                    Context.Entry(entity).State = EntityState.Modified;
+                    Context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error changing state for entity with ID {id}: {ex.Message}");
-                throw new DataAccessException(ex, "Error changing state for entity", Logger);
-
-
-
-        }   }
+                throw new DataAccessException(ex, "Error changing entity status", Logger);
+            }
+        }
     }
 }

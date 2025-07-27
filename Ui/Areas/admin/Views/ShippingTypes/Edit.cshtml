@@ -1,51 +1,175 @@
 ﻿@model DTOShippingType
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Create Shipping Type" : "Edit Shipping Type";
+    bool isEdit = Model.Id != Guid.Empty;
+}
 
 <div class="content-wrapper">
     <div class="page-header">
-        <h3 class="page-title"> @Shipping.ShippingTypes </h3>
+        <h3 class="page-title">@Shipping.ShippingTypes</h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"></a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form elements</li>
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "ShippingTypes", new { area = "Admin" })">@Shipping.ShippingTypes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(isEdit ? "Edit" : "Create")</li>
             </ol>
         </nav>
     </div>
 
-    <form class="forms-sample" method="post" enctype="multipart/form-data"
-          asp-controller="ShippingTypes" asp-action="Save" role="form">
+    <form class="forms-sample" method="post" asp-controller="ShippingTypes" asp-action="Save" role="form">
         <div class="row">
-
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">@Shipping.ShippingTypes</h4>
-                        <p class="card-description">  </p>
+                        <h4 class="card-title">@(isEdit ? "Edit" : "Create") @Shipping.ShippingTypes</h4>
+                        <p class="card-description">@(isEdit ? "Update shipping type information" : "Enter new shipping type information")</p>
 
-                        <input asp-for="Id" type="hidden" />
+                        @* Show validation summary if there are errors *@
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display: none;"></div>
+
+                        @* Hidden fields for edit mode *@
+                        @if (isEdit)
+                        {
+                            <input asp-for="Id" type="hidden" />
+                            <input asp-for="CreatedBy" type="hidden" />
+                            <input asp-for="CreatedDate" type="hidden" />
+                            <input asp-for="CurrentState" type="hidden" />
+                            <input asp-for="UpdatedBy" type="hidden" />
+                            <input asp-for="UpdatedDate" type="hidden" />
+                        }
+
                         <div class="form-group">
-                            <label for="exampleInputUsername1">@Labels.NameAr</label>
-                            <input asp-for="ShippingTypeAname" type="text" class="form-control" placeholder="@Labels.NameAr">
+                            <label asp-for="ShippingTypeAname">@Labels.NameAr</label>
+                            <input asp-for="ShippingTypeAname" type="text" class="form-control" placeholder="@Labels.NameAr" />
                             <span asp-validation-for="ShippingTypeAname" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputUsername1">@Labels.NameEn</label>
-                            <input asp-for="ShippingTypeEname" type="text" class="form-control" placeholder="@Labels.NameEn">
+                            <label asp-for="ShippingTypeEname">@Labels.NameEn</label>
+                            <input asp-for="ShippingTypeEname" type="text" class="form-control" placeholder="@Labels.NameEn" />
                             <span asp-validation-for="ShippingTypeEname" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleInputUsername1">@Labels.Factor</label>
-                            <input asp-for="ShippingFactor" type="text" class="form-control" placeholder="@Labels.Factor">
+                            <label asp-for="ShippingFactor">@Labels.Factor</label>
+                            <input asp-for="ShippingFactor" type="number" step="0.1" min="0.1" max="10" class="form-control" placeholder="@Labels.Factor" />
                             <span asp-validation-for="ShippingFactor" class="text-danger"></span>
+                            <small class="form-text text-muted">Factor should be between 0.1 and 10.0</small>
                         </div>
 
-                        <button type="submit" formmethod="post" class="btn btn-gradient-primary me-2">@Actions.Save</button>
-                        <button class="btn btn-light">@Actions.Clear</button>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-gradient-primary me-2">
+                                <i class="mdi mdi-content-save"></i> @Actions.Save
+                            </button>
+                            <a href="@Url.Action("Index", "ShippingTypes", new { area = "Admin" })" class="btn btn-light">
+                                <i class="mdi mdi-cancel"></i> @Actions.Cancel
+                            </a>
+                            @if (isEdit)
+                            {
+                                <a href="@Url.Action("Create", "ShippingTypes", new { area = "Admin" })" class="btn btn-success">
+                                    <i class="mdi mdi-plus"></i> Create New
+                                </a>
+                            }
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+    @* Information Panel *@
+    @if (!isEdit)
+    {
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Information</h4>
+                        <div class="alert alert-info">
+                            <h6><i class="mdi mdi-information"></i> Shipping Factor Guidelines:</h6>
+                            <ul class="mb-0">
+                                <li><strong>Economy Shipping:</strong> 0.5 - 0.8</li>
+                                <li><strong>Standard Shipping:</strong> 1.0</li>
+                                <li><strong>Express Shipping:</strong> 1.5 - 2.0</li>
+                                <li><strong>Overnight Shipping:</strong> 2.5 - 3.0</li>
+                                <li><strong>Premium Shipping:</strong> 3.0+</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Show validation summary if there are errors
+            if ($('.field-validation-error').length > 0) {
+                $('.alert-danger[asp-validation-summary]').show();
+            }
+
+            // Real-time validation feedback
+            $('input').on('blur keyup', function() {
+                var $input = $(this);
+                var fieldName = $input.attr('name');
+                var $validationSpan = $input.next('.text-danger');
+                
+                // Remove previous validation classes
+                $input.removeClass('is-invalid is-valid');
+                
+                // Check if field has validation errors
+                if ($validationSpan.length > 0 && $validationSpan.text().trim() !== '') {
+                    $input.addClass('is-invalid');
+                } else if ($input.val().trim() !== '') {
+                    $input.addClass('is-valid');
+                }
+            });
+
+            // Form submission validation
+            $('form').on('submit', function(e) {
+                var isValid = true;
+                var $form = $(this);
+                
+                // Check required fields
+                $('input[required], input[data-val-required]').each(function() {
+                    var $input = $(this);
+                    if ($input.val().trim() === '') {
+                        $input.addClass('is-invalid');
+                        isValid = false;
+                    }
+                });
+
+                // Check shipping factor range
+                var shippingFactor = parseFloat($('#ShippingFactor').val());
+                if (isNaN(shippingFactor) || shippingFactor < 0.1 || shippingFactor > 10) {
+                    $('#ShippingFactor').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('.alert-danger[asp-validation-summary]').show();
+                    $('html, body').animate({
+                        scrollTop: $('.alert-danger').offset().top - 100
+                    }, 500);
+                    return false;
+                }
+                
+                // Show loading state
+                $('button[type="submit"]').prop('disabled', true).html('<i class="mdi mdi-loading mdi-spin"></i> Saving...');
+            });
+
+            // Auto-focus first input
+            $('input[type="text"]:first').focus();
+            
+            // Initialize tooltips if bootstrap is available
+            if (typeof $().tooltip === 'function') {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    </script>
+}

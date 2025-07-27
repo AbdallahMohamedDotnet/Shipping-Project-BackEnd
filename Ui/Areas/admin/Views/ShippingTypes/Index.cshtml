@@ -9,7 +9,7 @@
 
 <div class="content-wrapper">
     <div class="page-header">
-        <h3 class="page-title"> @Shipping.ShippingTypes </h3>
+        <h3 class="page-title">@Shipping.ShippingTypes</h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">@Shipping.ShippingTypes</a></li>
@@ -17,53 +17,74 @@
             </ol>
         </nav>
     </div>
+    
+    @* Display success messages *@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success" role="alert">
             @TempData["SuccessMessage"]
         </div>
     }
+    
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title"></h4>
             <div class="row">
                 <div class="col-12">
+                    <a href="@Url.Action("Create", "ShippingTypes", new { area = "Admin" })" class="btn btn-success btn-fw mb-3">
+                        <i class="mdi mdi-plus"></i> @Actions.AddNew
+                    </a>
                 </div>
                 <div class="col-12">
-
-                    <a href="/Admin/ShippingTypes/Edit" class="btn btn-success btn-fw">@Actions.AddNew</a>
-
                     <table id="order-listing" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>@Labels.NameAr </th>
-                                <th>@Labels.NameEn </th>
-                                <th>@Labels.Factor </th>
+                                <th>@Labels.NameAr</th>
+                                <th>@Labels.NameEn</th>
+                                <th>@Labels.Factor</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
                                 <th>@Labels.Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var shippingTypes in Model)
+                            @foreach (var shippingType in Model)
                             {
                                 <tr>
-                                    <td class="col-md-8"> @shippingTypes.ShippingTypeAname</td>
-                                    <td class="col-md-8"> @shippingTypes.ShippingTypeEname</td>
-                                    <td class="col-md-8"> @shippingTypes.ShippingFactor</td>
-
-                                    <td class="col-md-4">
-                                        <a style="height:max-content"
-                                           asp-controller="ShippingTypes" asp-action="Edit" asp-route-Id="@shippingTypes.Id"
-                                           class="btn btn-info btn-fw">@Actions.Edit</a>
-
-                                        @*<a asp-controller="ShippingTypes" asp-action="Delete" asp-route-Id="@shippingTypes.Id"
-                                    class="btn btn-danger btn-fw" data-id="@shippingTypes.Id"
-                                    >@Actions.Delete</a> *@
-                                        <button type="button" class="btn btn-danger btn-fw" data-id="@shippingTypes.Id">@Actions.Delete</button>
-
+                                    <td>@shippingType.ShippingTypeAname</td>
+                                    <td>@shippingType.ShippingTypeEname</td>
+                                    <td>
+                                        <span class="badge badge-info">@shippingType.ShippingFactor.ToString("F2")</span>
+                                    </td>
+                                    <td>
+                                        @if (shippingType.CurrentState == 1)
+                                        {
+                                            <span class="badge badge-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>@shippingType.CreatedDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="@Url.Action("Edit", "ShippingTypes", new { area = "Admin", id = shippingType.Id })"
+                                               class="btn btn-info btn-sm">
+                                                <i class="mdi mdi-pencil"></i> @Actions.Edit
+                                            </a>
+                                            @if (shippingType.CurrentState == 1)
+                                            {
+                                                <button type="button" class="btn btn-danger btn-sm" 
+                                                        data-id="@shippingType.Id" 
+                                                        data-name="@shippingType.ShippingTypeEname"
+                                                        onclick="confirmDelete(this)">
+                                                    <i class="mdi mdi-delete"></i> @Actions.Delete
+                                                </button>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>
@@ -71,6 +92,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts
 {
     <!-- plugins:js -->
@@ -86,47 +108,98 @@
 
     <script>
         $(document).ready(function () {
-            $('.btn-danger').on('click', function (e) {
-                var id = $(this).data('id');
-                var deleteUrl = '@Url.Action("Delete", "ShippingTypes")';
+            // Initialize DataTable
+            $('#order-listing').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "searching": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "columnDefs": [
+                    { "orderable": false, "targets": 5 } // Disable sorting on actions column
+                ]
+            });
+        });
 
+        function confirmDelete(button) {
+            var id = $(button).data('id');
+            var name = $(button).data('name');
+            var deleteUrl = '@Url.Action("Delete", "ShippingTypes", new { area = "Admin" })';
+
+            if (typeof alert !== 'undefined' && alert.ConfirmDelete) {
+                // Use custom alert if available
                 alert.ConfirmDelete(function (result) {
                     if (result) {
-                        // Redirect to the delete action with the city ID
                         window.location.href = deleteUrl + '/' + id;
                     }
                 });
-
-            });
-        });
+            } else {
+                // Fallback to browser confirm
+                if (confirm('Are you sure you want to delete "' + name + '"? This action cannot be undone.')) {
+                    window.location.href = deleteUrl + '/' + id;
+                }
+            }
+        }
     </script>
 
+    @* Display message types *@
     @if (TempData["MessageType"] != null)
     {
         <script>
             $(document).ready(function () {
                 let messageType = @TempData["MessageType"];
-                console.log(messageType);
+                console.log('MessageType:', messageType);
+                
                 switch (messageType) {
-                    case 1:
-                        alert.Success('@Messages.SaveSuccessTitle', '@Messages.SaveSuccessMessage');
+                    case 1: // SaveSuccess
+                        if (typeof alert !== 'undefined' && alert.Success) {
+                            alert.Success('@Messages.SaveSuccessTitle', '@Messages.SaveSuccessMessage');
+                        } else {
+                            showBootstrapAlert('success', 'Success', 'Shipping type saved successfully!');
+                        }
                         break;
-                    case 2:
-                        alert.Error('@Messages.SaveFailedTitle', '@Messages.SaveFailedMessage');
+                    case 2: // SaveFailed
+                        if (typeof alert !== 'undefined' && alert.Error) {
+                            alert.Error('@Messages.SaveFailedTitle', '@Messages.SaveFailedMessage');
+                        } else {
+                            showBootstrapAlert('danger', 'Error', 'Failed to save shipping type.');
+                        }
                         break;
-                    case 3:
-                        alert.Success('@Messages.DeleteSuccessTitle', '@Messages.DeleteSucessMessage');
+                    case 3: // DeleteSuccess
+                        if (typeof alert !== 'undefined' && alert.Success) {
+                            alert.Success('@Messages.DeleteSuccessTitle', '@Messages.DeleteSucessMessage');
+                        } else {
+                            showBootstrapAlert('success', 'Success', 'Shipping type deleted successfully!');
+                        }
                         break;
-                    case 4:
-                        alert.Error('@Messages.DeleteFailedTitle', '@Messages.DeleteFailedMessage');
+                    case 4: // DeleteFailed
+                        if (typeof alert !== 'undefined' && alert.Error) {
+                            alert.Error('@Messages.DeleteFailedTitle', '@Messages.DeleteFailedMessage');
+                        } else {
+                            showBootstrapAlert('danger', 'Error', 'Failed to delete shipping type.');
+                        }
                         break;
                     default:
                         console.log("Unknown message type");
                         break;
                 }
             });
+
+            function showBootstrapAlert(type, title, message) {
+                var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    '<strong>' + title + ':</strong> ' + message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                    '</div>';
+                
+                $('.content-wrapper').prepend(alertHtml);
+                
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
+            }
         </script>
     }
-
 }
 <!-- content-wrapper ends -->

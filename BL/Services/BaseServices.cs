@@ -21,23 +21,25 @@ namespace BL.Services
             this.repo = repo;
             this.mapper = mapper;
         }
-
+        //
         public List<DTO> GetAll()
         {
-            var list = repo.GetAll();
-            return mapper.Map<List<DTO>>(list);
+            var list = repo.GetAll().Where(e => e.CurrentState ==1).ToList();
+            return mapper.Map<List<T>, List<DTO>>(list);
         }
 
+        //
         public DTO GetById(Guid id)
         {
             var entity = repo.GetById(id);
-            return mapper.Map<DTO>(entity);
+            return mapper.Map<T, DTO>(entity);
         }
+
 
         public bool Add(DTO entity)
         {
-            var dbobject = mapper.Map<T>(entity);
-            
+            var dbobject = mapper.Map<DTO, T>(entity);
+            dbobject.CreatedBy= Guid.NewGuid(); 
             dbobject.CreatedDate = DateTime.Now;
             dbobject.CurrentState = 1; // Active by default
             return repo.Add(dbobject);
@@ -45,16 +47,18 @@ namespace BL.Services
 
         public bool Update(DTO entity)
         {
-            var dbobject = mapper.Map<T>(entity);
-            
+            var dbobject = mapper.Map<DTO, T>(entity);
+            dbobject.UpdatedBy = new Guid();
             dbobject.UpdatedDate = DateTime.Now;
             return repo.Update(dbobject);
             
         }
-        
+
         public bool ChangeStatus(Guid id, int status = 1)
         {
-            return repo.ChangeState(id , status);
+            // Fix: Use proper user ID and correct method name
+            var userId = Guid.NewGuid(); // Generate a user ID (should be passed from controller in real scenario)
+            return repo.ChangeStatus(id, userId, status);
         }
     }
 }
