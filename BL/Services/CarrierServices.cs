@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BL.Contracts;
 using BL.DTOConfiguration;
 using DAL.Contracts;
 using Domains;
@@ -12,7 +13,7 @@ namespace BL.Services
 {
     public class CarrierServices : BaseServices<Domains.TbCarrier , DTOCarrier> , BL.Contracts.ICarrierServices
     {
-        public CarrierServices(ITableRepository<TbCarrier> repo , IMapper mapper) : base(repo, mapper)
+        public CarrierServices(ITableRepository<TbCarrier> repo , IMapper mapper , IUserService userService) : base(repo, mapper , userService)
         {
             
         }

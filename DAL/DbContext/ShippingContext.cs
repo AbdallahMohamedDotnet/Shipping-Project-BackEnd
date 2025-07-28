@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using DAL.UserModels;
 using Domains;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using DAL.UserModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 namespace DAL;
 
 public partial class ShippingContext : IdentityDbContext<ApplicationUser>

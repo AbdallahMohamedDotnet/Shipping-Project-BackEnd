@@ -13,7 +13,7 @@ namespace BL.Services
 {
     public class CountryServices : BaseServices<TbCountry, DTOCountry>, ICountry
     {
-        public CountryServices(ITableRepository<TbCountry> repo, IMapper mapper) : base(repo, mapper)
+        public CountryServices(ITableRepository<TbCountry> repo, IMapper mapper, IUserService userService) : base(repo, mapper, userService)
         {
         }
     }

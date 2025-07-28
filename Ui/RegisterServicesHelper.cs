@@ -73,7 +73,7 @@ namespace Ui
 
             // Register generic repository
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
-
+            builder.Services.AddScoped(typeof(IViewRepository<>), typeof(ViewRepository<>));
             // Register all business logic services
             builder.Services.AddScoped<ICarrierServices, CarrierServices>();
             builder.Services.AddScoped<ICity, CityServices>();

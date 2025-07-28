@@ -8,7 +8,7 @@ namespace BL.Services
 {
     public class UserReceiverServices : BaseServices<TbUserReceiver, DTOUserReceiver>, IUserReceiver
     {
-        public UserReceiverServices(ITableRepository<TbUserReceiver> repo, IMapper mapper) : base(repo, mapper)
+        public UserReceiverServices(ITableRepository<TbUserReceiver> repo, IMapper mapper , IUserService userService) : base(repo, mapper, userService)
         {
         }
     }
