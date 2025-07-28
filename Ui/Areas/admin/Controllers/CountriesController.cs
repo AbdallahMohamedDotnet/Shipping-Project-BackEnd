@@ -7,6 +7,7 @@ using Ui.Helpers;
 namespace Ui.Areas.admin.Controllers
 {
     [Area("admin")]
+    [Authorize(Roles = "Admin")]
     public class CountriesController : Controller
     {
         private readonly ICountry _countryService;

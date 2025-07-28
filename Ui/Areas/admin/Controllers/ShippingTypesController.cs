@@ -7,7 +7,7 @@ using Ui.Helpers;
 namespace Ui.Areas.admin.Controllers
 {
     [Area("admin")]
-    
+    [Authorize(Roles = "Admin")]
     public class ShippingTypesController : Controller
     {
         private readonly IShippingType IShippingTypes;

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Exceptions;
 using Microsoft.Extensions.Logging;
+
 namespace DAL.Repositories
 {
     public class TableRepository<T> : ITableRepository<T> where T : BaseTable
@@ -15,6 +16,7 @@ namespace DAL.Repositories
         private readonly ShippingContext Context;
         private readonly DbSet<T> DbSet;
         private readonly ILogger<TableRepository<T>> Logger;
+       
         public TableRepository(ShippingContext context, ILogger<TableRepository<T>> log)
         {
             this.Context = context;

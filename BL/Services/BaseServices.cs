@@ -15,11 +15,12 @@ namespace BL.Services
     {
         private readonly ITableRepository<T> repo;
         private readonly IMapper mapper;
-        
-        public BaseServices(ITableRepository<T> repo, IMapper mapper)
+        private readonly IUserService userService;
+        public BaseServices(ITableRepository<T> repo, IMapper mapper , IUserService userService)
         {
             this.repo = repo;
             this.mapper = mapper;
+            this.userService = userService;
         }
         //
         public List<DTO> GetAll()
@@ -39,16 +40,16 @@ namespace BL.Services
         public bool Add(DTO entity)
         {
             var dbobject = mapper.Map<DTO, T>(entity);
-            dbobject.CreatedBy= Guid.NewGuid(); 
+            dbobject.CreatedBy = userService.GetLoggedInUser();
             dbobject.CreatedDate = DateTime.Now;
-            dbobject.CurrentState = 1; // Active by default
+            dbobject.CurrentState = 1; 
             return repo.Add(dbobject);
         }
 
         public bool Update(DTO entity)
         {
             var dbobject = mapper.Map<DTO, T>(entity);
-            dbobject.UpdatedBy = new Guid();
+            dbobject.UpdatedBy = userService.GetLoggedInUser();
             dbobject.UpdatedDate = DateTime.Now;
             return repo.Update(dbobject);
             
@@ -58,7 +59,7 @@ namespace BL.Services
         {
             // Fix: Use proper user ID and correct method name
             var userId = Guid.NewGuid(); // Generate a user ID (should be passed from controller in real scenario)
-            return repo.ChangeStatus(id, userId, status);
+            return repo.ChangeStatus(id, userService.GetLoggedInUser(), status);
         }
     }
 }
