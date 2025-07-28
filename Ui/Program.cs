@@ -34,7 +34,12 @@ namespace Ui
     
             app.UseRouting();
 
+            // Add authentication and authorization middleware
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            // Map Razor Pages (since this is a Razor Pages project with Identity)
+            app.MapRazorPages();
 
             // Admin area route - MUST come first to have priority
             app.MapControllerRoute(
