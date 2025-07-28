@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
+using Ui.Services;
 
 namespace Ui
 {
@@ -20,15 +22,6 @@ namespace Ui
     {
         public static void RegisterServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/login";
-                options.AccessDeniedPath = "/access-denied";
-            });
-
-
-
             // Configure Serilog with modern syntax
             var logger = new LoggerConfiguration()
                 .WriteTo.Console()
@@ -45,18 +38,21 @@ namespace Ui
             builder.Services.AddDbContext<ShippingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add Identity with ASP.NET Core Identity
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+            // Add Identity with ASP.NET Core Identity (with roles support)
+            // Identity automatically configures cookie authentication
+            builder.Services.AddIdentity<ApplicationUser, Microsoft.AspNetCore.Identity.IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<ShippingContext>();
-            // Configure Authentication cookie options
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
+            })
+            .AddEntityFrameworkStores<ShippingContext>()
+            .AddDefaultTokenProviders();
+
+            // Configure cookie options for Identity
+            builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/login";
                 options.AccessDeniedPath = "/access-denied";
@@ -91,6 +87,7 @@ namespace Ui
             builder.Services.AddScoped<IUserReceiver, UserReceiverServices>();
             builder.Services.AddScoped<IUserSebder, UserSebderServices>();
             builder.Services.AddScoped<IUserSubscription, UserSubscriptionServices>();
+            builder.Services.AddScoped<IUserService, UserService>();
         }   
     }
 }

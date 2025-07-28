@@ -7,16 +7,16 @@ namespace Ui.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
             IHttpContextAccessor accessor)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _httpContextAccessor = accessor;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.httpContextAccessor = accessor;
         }
 
         public async Task<DTOUserResult> RegisterAsync(DTOUser registerDto)
@@ -27,7 +27,7 @@ namespace Ui.Services
             }
 
             var user = new ApplicationUser { UserName = registerDto.Email, Email = registerDto.Email };
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await userManager.CreateAsync(user, registerDto.Password);
 
             return new DTOUserResult
             {
@@ -38,7 +38,7 @@ namespace Ui.Services
 
         public async Task<DTOUserResult> LoginAsync(DTOUser loginDto)
         {
-            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
 
             if (!result.Succeeded)
             {
@@ -55,12 +55,12 @@ namespace Ui.Services
 
         public async Task LogoutAsync()
         {
-            await _signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
         }
 
         public async Task<DTOUser> GetUserByIdAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null) return null;
 
             return new DTOUser
@@ -72,7 +72,7 @@ namespace Ui.Services
 
         public async Task<IEnumerable<DTOUser>> GetAllUsersAsync()
         {
-            var users = _userManager.Users;
+            var users = userManager.Users;
             return users.Select(u => new DTOUser
             {
                 Id = Guid.Parse(u.Id),
@@ -82,9 +82,12 @@ namespace Ui.Services
 
         public Guid GetLoggedInUser()
         {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             return Guid.Parse(userId);
         }
     }
 
 }
+
+
+

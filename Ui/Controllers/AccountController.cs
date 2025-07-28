@@ -1,5 +1,5 @@
-﻿using BL.Contract;
-using BL.Dtos;
+﻿using BL.Contracts;
+using BL.DTOConfiguration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ui.Services;
@@ -21,7 +21,7 @@ namespace Ui.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserDto user)
+        public async Task<IActionResult> Login(DTOUser user)
         {
             var result = await _userService.LoginAsync(user);
             if (result.Success)
