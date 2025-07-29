@@ -116,7 +116,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbCarriers");
+                    b.ToTable("TbCarriers", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbCity", b =>
@@ -160,7 +160,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("TbCities");
+                    b.ToTable("TbCities", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbCountry", b =>
@@ -197,7 +197,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbCountries");
+                    b.ToTable("TbCountries", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbPaymentMethod", b =>
@@ -237,7 +237,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbPaymentMethods");
+                    b.ToTable("TbPaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbSetting", b =>
@@ -310,7 +310,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbShippingTypes");
+                    b.ToTable("TbShippingTypes", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbShippment", b =>
@@ -387,7 +387,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ShippingTypeId");
 
-                    b.ToTable("TbShippments");
+                    b.ToTable("TbShippments", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbShippmentStatus", b =>
@@ -468,7 +468,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbSubscriptionPackages");
+                    b.ToTable("TbSubscriptionPackages", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbUserReceiver", b =>
@@ -523,7 +523,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("TbUserReceivers");
+                    b.ToTable("TbUserReceivers", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbUserSebder", b =>
@@ -578,7 +578,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("TbUserSebders");
+                    b.ToTable("TbUserSebders", (string)null);
                 });
 
             modelBuilder.Entity("Domains.TbUserSubscription", b =>
@@ -616,7 +616,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("TbUserSubscriptions");
+                    b.ToTable("TbUserSubscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Domains.VwCities", b =>

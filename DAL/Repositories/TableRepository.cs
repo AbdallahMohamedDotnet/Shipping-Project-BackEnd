@@ -1,13 +1,14 @@
 ﻿using DAL.Contracts;
+using DAL.Exceptions;
 using Domains;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace DAL.Repositories
 {
@@ -116,6 +117,31 @@ namespace DAL.Repositories
                     return true;
                 }
                 return false;
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", Logger);
+            }
+        }
+
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        {
+            try
+            {
+                return DbSet.Where(filter).AsNoTracking().FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", Logger);
+            }
+        }
+
+        // Method to get a list of records based on a filter
+        public List<T> GetList(Expression<Func<T, bool>> filter)
+        {
+            try
+            {
+                return DbSet.Where(filter).AsNoTracking().ToList();
             }
             catch (Exception ex)
             {

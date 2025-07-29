@@ -1,9 +1,10 @@
-using BL.Contracts;
-using BL.Services;
+﻿using BL.Contracts;
 using BL.Mapping;
+using BL.Services;
 using DAL;
 using DAL.Contracts;
 using DAL.Repositories;
+using DAL.UserModels;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
@@ -13,51 +14,51 @@ namespace WebApi
     public class Program
     {
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-        var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7279") // 👈 Your MVC project URL
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials(); // 👈 Required for cookies (refresh token)
+                });
+            });
+            // Add services to the container.
 
-        // Add services to the container.
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+            //RegisterServciesHelper.RegisteredServices(builder);
 
-        builder.Services.AddDbContext<ShippingContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            // Configure Serilog for logging
-
-            //builder.Host.UseSerilog();            Log.Logger = new LoggerConfiguration()
-            //    .WriteTo.Console()
-            //    .WriteTo.MSSqlServer(
-            //        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-            //        tableName: "Log",
-            //        autoCreateSqlTable: true)
-            //    .CreateLogger();
-
-        builder.Services.AddAutoMapper(typeof(Program));
-        builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            //builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 
-        var app = builder.Build();
+            var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
-        app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
+            app.UseCors("AllowFrontend");
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-        app.UseAuthorization();
+
+            app.MapControllers();
 
 
-        app.MapControllers();
-
-        app.Run();
+            app.Run();
         }
     }
 }
