@@ -13,6 +13,7 @@ namespace BL.Contracts
         Task<DTOUserResult> LoginAsync(DTOUser loginDto);
         Task LogoutAsync();
         Task<DTOUser> GetUserByIdAsync(string userId);
+        Task<DTOUser> GetUserByEmailAsync(string email);
         Task<IEnumerable<DTOUser>> GetAllUsersAsync();
         Guid GetLoggedInUser();
     }

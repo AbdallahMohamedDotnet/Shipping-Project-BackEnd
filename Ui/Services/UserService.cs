@@ -79,6 +79,17 @@ namespace Ui.Services
                 Email = u.Email,
             });
         }
+        public async Task<DTOUser> GetUserByEmailAsync(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null) return null;
+
+            return new DTOUser
+            {
+                Id = Guid.Parse(user.Id),
+                Email = user.Email,
+            };
+        }
 
         public Guid GetLoggedInUser()
         {
