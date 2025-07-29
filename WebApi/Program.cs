@@ -12,57 +12,52 @@ namespace WebApi
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            // Configure Serilog with modern syntax
-            var logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.MSSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-                    sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true }
-                )
-                .CreateLogger();
+        // Add services to the container.
 
-            // Add logging services
-            builder.Services.AddLogging();
+        builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-            // Add AutoMapper
-            builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+        builder.Services.AddDbContext<ShippingContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add Entity Framework DbContext
-            builder.Services.AddDbContext<ShippingContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            // Configure Serilog for logging
 
-            // Register the DbContext as a service
-            builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ShippingContext>());
+            //builder.Host.UseSerilog();            Log.Logger = new LoggerConfiguration()
+            //    .WriteTo.Console()
+            //    .WriteTo.MSSqlServer(
+            //        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+            //        tableName: "Log",
+            //        autoCreateSqlTable: true)
+            //    .CreateLogger();
 
-            // Register generic repository
-            builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
+        builder.Services.AddAutoMapper(typeof(Program));
+        builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
-            // Register business logic services
-            builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
 
-            // Add API services
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        var app = builder.Build();
 
-            var app = builder.Build();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        app.UseHttpsRedirection();
 
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
+        app.UseAuthorization();
 
-            app.Run();
+
+        app.MapControllers();
+
+        app.Run();
         }
     }
 }

@@ -30,6 +30,9 @@ WORKDIR /app
 # Install SQL Server tools for potential debugging (optional)
 RUN apt-get update && apt-get install -y curl
 
+# Ensure globalization is not disabled
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 # Copy the published application
 COPY --from=publish /app/publish .
 
