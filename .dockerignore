@@ -16,9 +16,12 @@ packages/
 
 # Ignore test results
 TestResults/
+**/*.trx
+**/coverage/
 
 # Ignore logs
 *.log
+**/logs/
 
 # Ignore temporary files
 **/temp/
@@ -26,6 +29,7 @@ TestResults/
 
 # Ignore node modules (if any)
 node_modules/
+npm-debug.log*
 
 # Ignore git files
 .git/
@@ -40,7 +44,45 @@ node_modules/
 # Ignore IDE specific files
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Ignore OS specific files
 .DS_Store
 Thumbs.db
+ehthumbs.db
+
+# Ignore secrets and sensitive files
+**/appsettings.Production.json
+**/appsettings.Development.json
+**/*.pfx
+**/*.p12
+**/secrets.json
+
+# Ignore documentation that doesn't need to be in image
+README.md
+**/README.md
+*.md
+docs/
+
+# Ignore scripts that don't need to be in image
+docker-scripts/
+scripts/
+*.ps1
+*.sh
+
+# Ignore backup files
+*.bak
+*.backup
+
+# Ignore database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore development certificates
+**/*.crt
+**/*.key
+**/*.pem
