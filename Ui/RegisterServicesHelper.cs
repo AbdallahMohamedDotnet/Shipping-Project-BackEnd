@@ -22,16 +22,16 @@ namespace Ui
         public static void RegisterServices(WebApplicationBuilder builder)
         {
             // Configure Serilog with modern syntax
-            var logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.MSSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-                    sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true }
-                )
-                .CreateLogger();
+            //var logger = new LoggerConfiguration()
+            //    .WriteTo.Console()
+            //    .WriteTo.MSSqlServer(
+            //        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+            //        sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true }
+            //    )
+            //    .CreateLogger();
 
             // Set Serilog as the global logger
-            Log.Logger = logger;
+            //Log.Logger = logger;
 
             // Add Entity Framework DbContext first
             builder.Services.AddDbContext<ShippingContext>(options =>
