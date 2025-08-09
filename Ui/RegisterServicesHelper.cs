@@ -50,11 +50,13 @@ namespace Ui
             .AddEntityFrameworkStores<ShippingContext>()
             .AddDefaultTokenProviders();
 
-            // Configure cookie options for Identity
+            // Configure cookie options for Identity - redirect to Account/Login
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/login";
-                options.AccessDeniedPath = "/access-denied";
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                options.SlidingExpiration = true;
             });
 
             // Add Authorization
