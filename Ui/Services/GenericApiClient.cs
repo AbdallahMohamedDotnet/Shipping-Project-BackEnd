@@ -19,49 +19,77 @@ namespace Ui.Services
         // Generic method for GET requests
         public async Task<T> GetAsync<T>(string endpoint)
         {
-            var response = await _httpClient.GetAsync(endpoint);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var response = await _httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
 
-            var responseData = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseData);
+                var responseData = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(responseData);
+            }
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            {
+                throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
         }
 
         // Generic method for POST requests
         public async Task<T> PostAsync<T>(string endpoint, object data)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(endpoint, content);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                // Log or inspect the error response content
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error: {response.StatusCode}, Response: {errorContent}");
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(endpoint, content);
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    // Log or inspect the error response content
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}, Response: {errorContent}");
 
-                // Throw an exception or return default (can be customized based on your needs)
-                throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+                    // Throw an exception or return default (can be customized based on your needs)
+                    throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+                }
+
+                var responseData = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(responseData);
             }
-            response.EnsureSuccessStatusCode();
-
-            var responseData = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseData);
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            {
+                throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
         }
 
         // Generic method for PUT requests
         public async Task<T> PutAsync<T>(string endpoint, object data)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(endpoint, content);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(endpoint, content);
+                response.EnsureSuccessStatusCode();
 
-            var responseData = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseData);
+                var responseData = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(responseData);
+            }
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            {
+                throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
         }
 
         // Generic method for DELETE requests
         public async Task DeleteAsync(string endpoint)
         {
-            var response = await _httpClient.DeleteAsync(endpoint);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var response = await _httpClient.DeleteAsync(endpoint);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            {
+                throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
         }
     }
 }

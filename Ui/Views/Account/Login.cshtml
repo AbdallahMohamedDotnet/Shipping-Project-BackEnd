@@ -35,14 +35,28 @@
                             </div>
                             <h4>Hello! let's get started</h4>
                             <h6 class="font-weight-light">Sign in to continue.</h6>
+                            
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <div>@error.ErrorMessage</div>
+                                    }
+                                </div>
+                            }
+                            
                             <form asp-controller="Account" asp-action="Login" method="post" role="form" class="pt-3">
+                                @Html.AntiForgeryToken()
                                 <div class="form-group">
-                                    <input type="email" asp-for="Email"
+                                    <input type="email" asp-for="Email" required
                                            class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" asp-for="Password"
+                                    <input type="password" asp-for="Password" required
                                            class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                                 <div class="my-3">
                                     <button type="submit"
@@ -69,7 +83,7 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="~/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="~/admin/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <!-- End plugin js for this page -->

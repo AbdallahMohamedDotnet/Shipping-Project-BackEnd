@@ -11,23 +11,27 @@ using DAL.UserModels;
 using Microsoft.AspNetCore.Identity;
 using System.Net.Http.Headers;
 using BL.Contracts;
-
 namespace Ui.Services
 {
     public class RegisterServciesHelper
     {
         public static void RegisteredServices(WebApplicationBuilder builder)
         {
+            // Add HttpContextAccessor
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddHttpClient("ApiClient", client =>
             {
                 // Base URL will be configured in GenericApiClient constructor using appsettings.json
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                // Set a reasonable timeout
+                client.Timeout = TimeSpan.FromSeconds(30);
             });
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-                options.LoginPath = "/login";
+                options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/access-denied";
             });
 
