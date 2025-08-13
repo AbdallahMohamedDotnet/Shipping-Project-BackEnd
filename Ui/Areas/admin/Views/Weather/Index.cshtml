@@ -1,0 +1,99 @@
+@using Ui.Models
+@model List<WeatherForecast>
+
+@{
+    ViewData["Title"] = "Weather Forecast";
+}
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                <i class="mdi mdi-weather-cloudy"></i>
+            </span> Weather Forecast
+        </h3>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="admin" asp-controller="Home" asp-action="Index">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>Weather
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">5-Day Weather Forecast</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Temperature (°C)</th>
+                                    <th>Temperature (°F)</th>
+                                    <th>Summary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    @foreach (var weather in Model)
+                                    {
+                                        <tr>
+                                            <td>@weather.Date.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <span class="badge badge-gradient-info">@weather.TemperatureC°C</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-gradient-warning">@weather.TemperatureF°F</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">@weather.Summary</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">
+                                            No weather data available
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <a asp-area="admin" asp-controller="Home" asp-action="Index" class="btn btn-gradient-primary">
+                        <i class="mdi mdi-arrow-left"></i> Back to Admin Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

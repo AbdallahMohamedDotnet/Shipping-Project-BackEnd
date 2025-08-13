@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ui.Services;
 using Ui.Models;
@@ -7,31 +7,27 @@ namespace Ui.Areas.admin.Controllers
 {
     [Area("admin")]
     [Authorize(Roles = "Admin")]
-    public class HomeController : Controller
+    public class WeatherController : Controller
     {
         private readonly GenericApiClient _apiClient;
 
-        public HomeController(GenericApiClient apiClient)
+        public WeatherController(GenericApiClient apiClient)
         {
             _apiClient = apiClient;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetWeatherData()
+        public async Task<IActionResult> Index()
         {
             try
             {
                 var weatherData = await _apiClient.GetAsync<List<WeatherForecast>>("api/WeatherForecast");
-                return Json(new { success = true, data = weatherData });
+                return View(weatherData);
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Error fetching weather data: {ex.Message}" });
+                // Handle error
+                ViewBag.ErrorMessage = $"Error fetching weather data: {ex.Message}";
+                return View(new List<WeatherForecast>());
             }
         }
     }

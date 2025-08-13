@@ -339,4 +339,139 @@
             </div>
         </div>
     </div>
+    
+    <!-- Weather Button Section at the bottom -->
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card bg-gradient-info card-img-holder text-white">
+                <div class="card-body text-center">
+                    <img src="~/admin/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                    <h4 class="font-weight-normal mb-3">
+                        <i class="mdi mdi-weather-cloudy mdi-24px me-2"></i>
+                        Check Weather Forecast
+                    </h4>
+                    <p class="mb-4">View the latest 5-day weather forecast</p>
+                    <button class="btn btn-outline-light btn-lg" onclick="showWeatherModal()">
+                        <i class="mdi mdi-eye me-2"></i>See Weather
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Weather Modal -->
+<div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title" id="weatherModalLabel">
+                    <i class="mdi mdi-weather-cloudy me-2"></i>
+                    Weather Forecast
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="weatherLoading" class="text-center" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading weather data...</p>
+                </div>
+                <div id="weatherError" class="alert alert-danger" style="display: none;"></div>
+                <div id="weatherContent">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Temperature (°C)</th>
+                                    <th>Temperature (°F)</th>
+                                    <th>Summary</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weatherTableBody">
+                                <!-- Weather data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="mdi mdi-close me-2"></i>Close
+                </button>
+                <button type="button" class="btn btn-primary" onclick="refreshWeather()">
+                    <i class="mdi mdi-refresh me-2"></i>Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showWeatherModal() {
+    $('#weatherModal').modal('show');
+    loadWeatherData();
+}
+
+function loadWeatherData() {
+    // Show loading indicator
+    $('#weatherLoading').show();
+    $('#weatherError').hide();
+    $('#weatherContent').hide();
+    
+    $.ajax({
+        url: '@Url.Action("GetWeatherData", "Home", new { area = "admin" })',
+        type: 'GET',
+        success: function(response) {
+            $('#weatherLoading').hide();
+            if (response.success) {
+                populateWeatherTable(response.data);
+                $('#weatherContent').show();
+            } else {
+                showWeatherError(response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            $('#weatherLoading').hide();
+            showWeatherError('Failed to load weather data. Please ensure both the UI and WebAPI projects are running.');
+        }
+    });
+}
+
+function populateWeatherTable(weatherData) {
+    var tbody = $('#weatherTableBody');
+    tbody.empty();
+    
+    if (weatherData && weatherData.length > 0) {
+        weatherData.forEach(function(weather) {
+            var date = new Date(weather.date);
+            var formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: '2-digit' 
+            });
+            
+            var row = '<tr>' +
+                '<td>' + formattedDate + '</td>' +
+                '<td><span class="badge bg-info text-dark">' + weather.temperatureC + '°C</span></td>' +
+                '<td><span class="badge bg-warning text-dark">' + weather.temperatureF + '°F</span></td>' +
+                '<td><span class="text-muted">' + weather.summary + '</span></td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+    } else {
+        tbody.append('<tr><td colspan="4" class="text-center text-muted">No weather data available</td></tr>');
+    }
+}
+
+function showWeatherError(message) {
+    $('#weatherError').text(message).show();
+    $('#weatherContent').hide();
+}
+
+function refreshWeather() {
+    loadWeatherData();
+}
+</script>
