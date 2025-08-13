@@ -1,26 +1,29 @@
-using BL;
-using BL.Contracts;
 using BL.Mapping;
 using BL.Services;
 using DAL;
 using DAL.Contracts;
 using DAL.Repositories;
+using DAL.UserModels;
+using Domains;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-
+using Ui.Services;
 namespace Ui
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
-            // Register services BEFORE building the application
-            RegisterServicesHelper.RegisterServices(builder);       
-            
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            RegisterServciesHelper.RegisteredServices(builder);
+
             var app = builder.Build();
-            
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -31,31 +34,33 @@ namespace Ui
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-    
+
             app.UseRouting();
 
-            // Add authentication and authorization middleware
-            app.UseAuthentication();
             app.UseAuthorization();
 
-            // Map Razor Pages (since this is a Razor Pages project with Identity)
-            app.MapRazorPages();
-
-            // Admin area route - MUST come first to have priority
             app.MapControllerRoute(
-                name: "adminArea",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}",
-                constraints: new { area = "admin" });
-
-            // Generic area route for other areas
-            app.MapControllerRoute(
-                name: "areas",
+                name: "admin",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-            // Default route for non-area controllers
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var dbContext = services.GetRequiredService<ShippingContext>();
+
+                // Apply migrations
+               // await dbContext.Database.MigrateAsync();
+
+                // Seed data
+              // await ContextConfig.SeedDataAsync(dbContext, userManager, roleManager);
+            }
 
             app.Run();
         }

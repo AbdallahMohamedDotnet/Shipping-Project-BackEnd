@@ -1,25 +1,29 @@
-﻿using BL.Contracts;
-using BL.Mapping;
+﻿using BL.Mapping;
 using BL.Services;
 using DAL.Contracts;
 using DAL.Repositories;
 using DAL;
+using Microsoft.EntityFrameworkCore.Internal;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DAL.UserModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using WebApi.Services;
+using System.Net.Http.Headers;
+using BL.Contracts;
 
-namespace WebApi.Services
+namespace Ui.Services
 {
     public class RegisterServciesHelper
     {
         public static void RegisteredServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddHttpClient("ApiClient", client =>
+            {
+                // Base URL will be configured in GenericApiClient constructor using appsettings.json
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -40,24 +44,7 @@ namespace WebApi.Services
             }).AddEntityFrameworkStores<ShippingContext>()
     .AddDefaultTokenProviders();
 
-            var jwtSecretKey = builder.Configuration.GetValue<string>("JwtSettings:SecretKey");
-            var key = Encoding.ASCII.GetBytes(jwtSecretKey);
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
+            builder.Services.AddAuthorization();
 
             // Configure Serilog for logging
             Log.Logger = new LoggerConfiguration()
@@ -72,17 +59,14 @@ namespace WebApi.Services
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
-            // Add IHttpContextAccessor which is required by UserService
-            builder.Services.AddHttpContextAccessor();
-
             //builder.Services.AddScoped<IGenericRepository<TbShippingType>, DAL.Repositories.GenericRepository<TbShippingType>>();
+            builder.Services.AddScoped<GenericApiClient>();
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
             builder.Services.AddScoped(typeof(IViewRepository<>), typeof(ViewRepository<>));
             builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
             builder.Services.AddScoped<ICountry, CountryServices>();
             builder.Services.AddScoped<ICity, CityServices>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddSingleton<TokenService>();
             builder.Services.AddScoped<IRefreshTokens, RefreshTokenService>();
         }
     }

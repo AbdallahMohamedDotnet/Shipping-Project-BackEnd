@@ -3,7 +3,7 @@ using DAL.UserModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ui.Services
+namespace WebApi.Services
 {
     public class ContextConfig
     {

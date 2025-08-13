@@ -1,14 +1,13 @@
-﻿using DAL.UserModels;
-using Microsoft.AspNetCore.Identity.Data;
+﻿using BL.Contracts;
+using BL.DTOConfiguration;
+using BL.Services;
+using DAL.UserModels;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApi.Services;
-using BL.DTOConfiguration;
-using BL.Contracts;
-using BL.Services;
-using Azure.Core;
-using Microsoft.AspNet.Identity;
 
 namespace WebApi.Controllers
 {
@@ -16,22 +15,22 @@ namespace WebApi.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly TokenService tokenService;
-        private readonly IUserService userService;
-        private readonly IRefreshTokens RefreshTokenService;
+        private readonly TokenService _tokenService;
+        private readonly IUserService _userService;
+        private readonly IRefreshTokens _RefreshTokenService;
         public AuthController(TokenService tokenService,
                               IUserService userService,
                               IRefreshTokens refreshTokenService)
         {
-            tokenService = tokenService;
-            userService = userService;
-            RefreshTokenService = refreshTokenService;
+            _tokenService = tokenService;
+            _userService = userService;
+            _RefreshTokenService = refreshTokenService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] DTOUser request)
         {
-            var result = await userService.RegisterAsync(request);
+            var result = await _userService.RegisterAsync(request);
 
             if (!result.Success)
                 return BadRequest(result.Errors);
@@ -42,7 +41,7 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] DTOUser request)
         {
-            var userResult = await userService.LoginAsync(request);
+            var userResult = await _userService.LoginAsync(request);
             if (!userResult.Success)
             {
                 return Unauthorized("Invalid credentials");
@@ -52,8 +51,8 @@ namespace WebApi.Controllers
             var userData = await GetClims(request.Email);
             var claims = userData.Item1;
             DTOUser user = userData.Item2;
-            var accessToken = tokenService.GenerateAccessToken(claims);
-            var refreshToken = tokenService.GenerateRefreshToken();
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
             var storedToken = new DTORefreshToken
             {
@@ -63,7 +62,7 @@ namespace WebApi.Controllers
                 CurrentState = 1
             };
 
-            //RefreshTokenService.Refresh(storedToken);
+            _RefreshTokenService.RefreshTokenExists(storedToken);
 
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
             {
@@ -72,7 +71,7 @@ namespace WebApi.Controllers
                 Expires = storedToken.Expires
             });
 
-            return Ok(new { AccessToken = accessToken,RefreshToken= refreshToken });
+            return Ok(new { AccessToken = accessToken, RefreshToken = refreshToken });
         }
 
         [HttpPost("refresh-access-token")]
@@ -84,16 +83,16 @@ namespace WebApi.Controllers
             }
 
             // Retrieve the refresh token from the database
-            var storedToken = RefreshTokenService.GetByToken(refreshToken);
-            if (storedToken == null || storedToken.CurrentState==2 || storedToken.Expires < DateTime.UtcNow)
+            var storedToken = _RefreshTokenService.GetByToken(refreshToken);
+            if (storedToken == null || storedToken.CurrentState == 2 || storedToken.Expires < DateTime.UtcNow)
             {
                 return Unauthorized("Invalid or expired refresh token");
             }
 
             // Generate a new access token
-            var claims  = await GetClimsById(storedToken.UserId);
+            var claims = await GetClimsById(storedToken.UserId);
 
-            var newAccessToken = tokenService.GenerateAccessToken(claims);
+            var newAccessToken = _tokenService.GenerateAccessToken(claims);
 
             return Ok(new { AccessToken = newAccessToken });
         }
@@ -107,14 +106,14 @@ namespace WebApi.Controllers
             }
 
             // Retrieve the refresh token from the database
-            var storedToken = RefreshTokenService.GetByToken(refreshToken);
+            var storedToken = _RefreshTokenService.GetByToken(refreshToken);
             if (storedToken == null || storedToken.CurrentState == 2 || storedToken.Expires < DateTime.UtcNow)
             {
                 return Unauthorized("Invalid or expired refresh token");
             }
 
             // Generate a new refresh token
-            var newRefreshToken = tokenService.GenerateRefreshToken();
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
             var newRefreshDto = new DTORefreshToken
             {
                 Token = newRefreshToken,
@@ -122,7 +121,7 @@ namespace WebApi.Controllers
                 Expires = DateTime.UtcNow.AddDays(7),
                 CurrentState = 1
             };
-            RefreshTokenService.RefreshTokenExists(newRefreshDto);
+            _RefreshTokenService.RefreshTokenExists(newRefreshDto);
 
             // Set the new refresh token in the cookies
             Response.Cookies.Append("RefreshToken", newRefreshToken, new CookieOptions
@@ -135,9 +134,9 @@ namespace WebApi.Controllers
             return Ok(new { RefreshToken = newRefreshToken });
         }
 
-        async Task<(Claim[],DTOUser)> GetClims(string email)
+        async Task<(Claim[], DTOUser)> GetClims(string email)
         {
-            var user = await userService.GetUserByEmailAsync(email);
+            var user = await _userService.GetUserByEmailAsync(email);
             var claims = new[] {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.Role, "User")
@@ -148,7 +147,7 @@ namespace WebApi.Controllers
 
         async Task<Claim[]> GetClimsById(string userId)
         {
-            var user = await userService.GetUserByIdAsync(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
 
             var claims = new[] {
                 new Claim(ClaimTypes.Name, user.Email),

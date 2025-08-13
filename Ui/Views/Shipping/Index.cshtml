@@ -1,0 +1,90 @@
+@model List<object>
+@{
+    ViewData["Title"] = "Shipping Types - API Integration Demo";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>Shipping Types from WebAPI</h2>
+            <hr />
+            
+            <!-- API Status Display -->
+            <div class="alert @(ViewBag.ApiStatus.ToString().Contains("Success") ? "alert-success" : "alert-danger")" role="alert">
+                <strong>API Status:</strong> @ViewBag.ApiStatus
+            </div>
+
+            <!-- Test API Connection Button -->
+            <button type="button" class="btn btn-primary mb-3" onclick="testApiConnection()">
+                Test API Connection
+            </button>
+
+            <!-- Data Display -->
+            @if (Model != null && Model.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Data from WebAPI</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.Raw(System.Text.Json.JsonSerializer.Serialize(item, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    No data received from WebAPI. Make sure both projects are running.
+                </div>
+            }
+
+            <!-- Instructions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Setup Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li>Make sure both WebAPI (https://localhost:7048) and UI (https://localhost:7279) projects are running</li>
+                        <li>The WebAPI project should have Swagger available at: <a href="https://localhost:7048/swagger" target="_blank">https://localhost:7048/swagger</a></li>
+                        <li>This page attempts to call the WebAPI to demonstrate the integration</li>
+                        <li>Check the browser console and server logs for any errors</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function testApiConnection() {
+    fetch('/Shipping/TestApiConnection')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('? ' + data.message);
+            } else {
+                alert('? ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('? Error: ' + error.message);
+        });
+}
+</script>

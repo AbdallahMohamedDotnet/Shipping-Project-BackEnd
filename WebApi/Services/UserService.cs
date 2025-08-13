@@ -1,4 +1,5 @@
 ﻿using BL.Contracts;
+using BL.Contracts;
 using BL.DTOConfiguration;
 using DAL.UserModels;
 using Microsoft.AspNetCore.Identity;
@@ -95,6 +96,10 @@ namespace WebApi.Services
         public Guid GetLoggedInUser()
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Guid.Empty; // Return empty Guid if no user is logged in
+            }
             return Guid.Parse(userId);
         }
     }
