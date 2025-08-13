@@ -28,9 +28,7 @@ namespace Ui.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(DTOUser user)
         {
-            // Remove ConfirmPassword validation for login
-            ModelState.Remove("ConfirmPassword");
-            
+
             if (!ModelState.IsValid)
             {
                 return View(user);
