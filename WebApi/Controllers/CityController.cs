@@ -64,7 +64,7 @@ namespace WebApi.Controllers
         }
 
         // GET api/<ShippingTypesController>/5
-        [HttpGet("country/{countryId}")]
+        [HttpGet("GetByCountry{id}")]
         public ActionResult<ApiResponse<DTOCity>> GetByCountry(Guid id)
         {
             try
