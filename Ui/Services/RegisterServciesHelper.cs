@@ -63,6 +63,9 @@ namespace Ui.Services
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
+            // Register custom IMapper wrapper
+            builder.Services.AddScoped<BL.Mapping.IMapper, BL.Mapping.AutoMapper>();
+
             //builder.Services.AddScoped<IGenericRepository<TbShippingType>, DAL.Repositories.GenericRepository<TbShippingType>>();
             builder.Services.AddScoped<GenericApiClient>();
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
