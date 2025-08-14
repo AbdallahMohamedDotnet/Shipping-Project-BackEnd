@@ -7,16 +7,16 @@ namespace Ui.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
             IHttpContextAccessor accessor)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.httpContextAccessor = accessor;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _httpContextAccessor = accessor;
         }
 
         public async Task<DTOUserResult> RegisterAsync(DTOUser registerDto)
@@ -26,8 +26,28 @@ namespace Ui.Services
                 return new DTOUserResult { Success = false, Errors = new[] { "Passwords do not match." } };
             }
 
-            var user = new ApplicationUser { UserName = registerDto.Email, Email = registerDto.Email };
-            var result = await userManager.CreateAsync(user, registerDto.Password);
+            var user = new ApplicationUser
+            {
+                UserName = registerDto.Email,
+                Email = registerDto.Email,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                Phone = registerDto.Phone
+            };
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            var roleName = (string.IsNullOrEmpty(registerDto.Role)) ? "User" : registerDto.Role;
+
+            var roleResult = await _userManager.AddToRoleAsync(user, roleName);
+
+            if (!roleResult.Succeeded)
+            {
+                return new DTOUserResult
+                {
+                    Success = false,
+                    Errors = roleResult.Errors?.Select(e => e.Description)
+                };
+            }
 
             return new DTOUserResult
             {
@@ -36,9 +56,9 @@ namespace Ui.Services
             };
         }
 
-        public async Task<DTOUserResult> LoginAsync(DTOUser loginDto)
+        public async Task<DTOUserResult> LoginAsync(DTOLogin loginDto)
         {
-            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
 
             if (!result.Succeeded)
             {
@@ -55,45 +75,58 @@ namespace Ui.Services
 
         public async Task LogoutAsync()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
         }
 
         public async Task<DTOUser> GetUserByIdAsync(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
 
             return new DTOUser
             {
                 Id = Guid.Parse(user.Id),
                 Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Role = roles.FirstOrDefault()
+            };
+        }
+
+        public async Task<DTOUser> GetUserByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return new DTOUser
+            {
+                Id = Guid.Parse(user.Id),
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                Role = roles.FirstOrDefault()
             };
         }
 
         public async Task<IEnumerable<DTOUser>> GetAllUsersAsync()
         {
-            var users = userManager.Users;
+            var users = _userManager.Users;
             return users.Select(u => new DTOUser
             {
                 Id = Guid.Parse(u.Id),
                 Email = u.Email,
             });
         }
-        public async Task<DTOUser> GetUserByEmailAsync(string email)
-        {
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null) return null;
-
-            return new DTOUser
-            {
-                Id = Guid.Parse(user.Id),
-                Email = user.Email,
-            };
-        }
 
         public Guid GetLoggedInUser()
         {
-            var userId = httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             return Guid.Parse(userId);
         }
     }

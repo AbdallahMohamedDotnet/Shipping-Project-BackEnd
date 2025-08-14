@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace DAL.UserModels
 {
     public class ApplicationUser : IdentityUser
     {
-
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Phone { get; set; }
     }
 }

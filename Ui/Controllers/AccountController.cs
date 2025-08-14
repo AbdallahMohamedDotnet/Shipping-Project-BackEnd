@@ -2,6 +2,7 @@
 using BL.DTOConfiguration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Ui.Models;
 using Ui.Services;
 
@@ -11,14 +12,17 @@ namespace Ui.Controllers
     {
         IUserService _userService;
         private readonly GenericApiClient _apiClient;
-        
         public AccountController(IUserService userService, GenericApiClient apiClient)
         {
             _userService = userService;
             _apiClient = apiClient;
         }
-        
         public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
         {
             return View();
         }
@@ -26,82 +30,64 @@ namespace Ui.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(DTOUser user)
+        public async Task<IActionResult> Login(DTOLogin user)
         {
-
             if (!ModelState.IsValid)
-            {
                 return View(user);
-            }
 
-            try
+            var result = await _userService.LoginAsync(user);
+            if (result.Success)
             {
-                // First try local authentication
-                var localResult = await _userService.LoginAsync(user);
-                if (localResult.Success)
-                {
-                    // If local auth succeeds, redirect to admin
-                    return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
-                }
-                else
-                {
-                    // If local auth fails, try API
-                    try
-                    {
-                        LoginApiModel apiResult = await _apiClient.PostAsync<LoginApiModel>("api/auth/login", user);
+                // Call the login API using the generic client
+                LoginApiModel apiResult = await _apiClient.PostAsync<LoginApiModel>("api/auth/login", user);
 
-                        if (apiResult != null && !string.IsNullOrEmpty(apiResult.AccessToken))
-                        {
-                            // Store the access token in the cookie
-                            Response.Cookies.Append("AccessToken", apiResult.AccessToken, new CookieOptions
-                            {
-                                HttpOnly = false,
-                                Secure = true,
-                                Expires = DateTime.UtcNow.AddMinutes(15)
-                            });
-
-                            return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
-                        }
-                    }
-                    catch (HttpRequestException ex) when (ex.Message.Contains("Unable to connect"))
-                    {
-                        // API is not available, fall back to local auth error
-                        ModelState.AddModelError(string.Empty, "Invalid email or password.");
-                        return View(user);
-                    }
-                    
-                    ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                if (apiResult == null)
+                {
+                    ModelState.AddModelError(string.Empty, "API error: Unable to process login.");
                     return View(user);
                 }
+
+                var accessToken = apiResult?.AccessToken.ToString();
+
+                if (string.IsNullOrEmpty(accessToken))
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(user);
+                }
+                // Store the access token in the cookie (for subsequent requests)
+                Response.Cookies.Append("AccessToken", accessToken, new CookieOptions
+                {
+                    HttpOnly = false,
+                    Secure = true,
+                    Expires = DateTime.UtcNow.AddMinutes(15)  // Adjust token expiry based on your needs
+                });
+
+                var dbUser = await _userService.GetUserByEmailAsync(user.Email);
+
+                if (dbUser.Role.ToLower() == "admin")
+                    return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
+                else
+                    return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, "An error occurred during login. Please try again.");
-                return View(user);
-            }
+            else
+                return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> TestApiConnection()
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(DTOUser user)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(user);
+
+            var result = await _userService.RegisterAsync(user);
+            if (result.Success)
             {
-                var testUser = new DTOUser { Email = "test@test.com", Password = "test" };
-                await _apiClient.PostAsync<LoginApiModel>("api/auth/login", testUser);
-                return Json(new { success = false, message = "API is reachable but login failed (expected for test credentials)" });
+                return RedirectToRoute(new { controller = "Account", action = "Login" });
             }
-            catch (HttpRequestException ex) when (ex.Message.Contains("Unable to connect"))
-            {
-                return Json(new { success = false, message = $"Cannot connect to API server: {ex.Message}" });
-            }
-            catch (HttpRequestException ex) when (ex.Message.Contains("401") || ex.Message.Contains("Unauthorized"))
-            {
-                return Json(new { success = true, message = "API is reachable and responding correctly" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Unexpected error: {ex.Message}" });
-            }
+            else
+                return View();
         }
     }
 }
