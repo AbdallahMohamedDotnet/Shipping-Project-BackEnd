@@ -1,13 +1,14 @@
 ﻿using DAL.Contracts;
+using DAL.Exceptions;
 using Domains;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using DAL.Exceptions;
 namespace DAL.Repositories
 {
     public class ViewRepository<T> : IViewRepository<T> where T : class
@@ -46,6 +47,30 @@ namespace DAL.Repositories
                 throw new DataAccessException(ex, "", _logger);
             }
         }
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        {
+            try
+            {
+                return _dbSet.Where(filter).AsNoTracking().FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", _logger);
+            }
+        }
+
+        public List<T> GetList(Expression<Func<T, bool>> filter)
+        {
+            try
+            {
+                return _dbSet.Where(filter).AsNoTracking().ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", _logger);
+            }
+        }
+    }
     }
 
-}
+

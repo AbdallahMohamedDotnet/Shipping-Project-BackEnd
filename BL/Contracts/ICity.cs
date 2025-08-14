@@ -11,5 +11,6 @@ namespace BL.Contracts
     public interface ICity : IBaseService<TbCity, DTOCity>
     {
         public List<DTOCity> GetAllCitites();
+        List<DTOCity> GetByCountry(Guid countryId);
     }
 }

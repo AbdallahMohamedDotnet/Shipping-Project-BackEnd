@@ -11,11 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 namespace BL.Services
 {
-    public class CityServices : BaseServices<TbCity, DTOCity> ,ICity
+    public class CityServices : BaseServices<TbCity, DTOCity>, ICity
     {
-        private readonly IViewRepository<VwCities> ViewRepo ;
+        private readonly IViewRepository<VwCities> ViewRepo;
         private readonly IMapper Mapper;
-        public CityServices(ITableRepository<TbCity> repo , IMapper Mapper , IUserService userService , IViewRepository<VwCities> ViewRepo) : base(repo , Mapper ,  userService)
+        public CityServices(ITableRepository<TbCity> repo, IMapper Mapper, IUserService userService, IViewRepository<VwCities> ViewRepo) : base(repo, Mapper, userService)
         {
             this.Mapper = Mapper;
             this.ViewRepo = ViewRepo;
@@ -23,7 +23,13 @@ namespace BL.Services
         public List<DTOCity> GetAllCitites()
         {
             var cities = ViewRepo.GetAll().Where(a => a.CurrentState == 1).ToList();
-            return  Mapper.Map<List<VwCities>, List<DTOCity>>(cities);
+            return Mapper.Map<List<VwCities>, List<DTOCity>>(cities);
+        }
+        public List<DTOCity> GetByCountry(Guid countryId)
+        {
+            var cities = ViewRepo.GetAll().Where(a => a.CountryId == countryId && a.CurrentState == 1).ToList();
+            return Mapper.Map<List<VwCities>, List<DTOCity>>(cities);
+
         }
     }
 }
