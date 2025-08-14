@@ -26,6 +26,10 @@ namespace BL.Mapping
             CreateMap<TbUserReceiver, DTOUserReceiver>().ReverseMap();
             CreateMap<TbUserSebder, DTOUserSebder>().ReverseMap();
             CreateMap<TbUserSubscription, DTOUserSubscription>().ReverseMap();
+            // Add mapping for VwCities to DTOCity (view to DTO mapping)
+            CreateMap<VwCities, DTOCity>()
+                .ForMember(dest => dest.CountryAname, opt => opt.MapFrom(src => src.CountryAname))
+                .ForMember(dest => dest.CountryEname, opt => opt.MapFrom(src => src.CountryEname));
         }
     }
 }

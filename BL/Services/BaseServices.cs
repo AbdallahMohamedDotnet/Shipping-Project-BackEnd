@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using AutoMapperCore = AutoMapper;
 using BL.Contracts;
 using DAL.Contracts;
 using Domains;
@@ -14,9 +14,9 @@ namespace BL.Services
     public class BaseServices<T, DTO> : IBaseService<T, DTO> where T : BaseTable
     {
         private readonly ITableRepository<T> repo;
-        private readonly IMapper mapper;
+        private readonly AutoMapperCore.IMapper mapper;
         private readonly IUserService userService;
-        public BaseServices(ITableRepository<T> repo, IMapper mapper , IUserService userService)
+        public BaseServices(ITableRepository<T> repo, AutoMapperCore.IMapper mapper , IUserService userService)
         {
             this.repo = repo;
             this.mapper = mapper;
