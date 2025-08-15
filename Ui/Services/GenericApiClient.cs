@@ -6,10 +6,12 @@ namespace Ui.Services
     public class GenericApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<GenericApiClient> _logger;
 
-        public GenericApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public GenericApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<GenericApiClient> logger)
         {
             _httpClient = httpClientFactory.CreateClient("ApiClient");
+            _logger = logger;
 
             // Get the base API URL from appsettings.json
             var baseUrl = configuration["ApiSettings:BaseUrl"];
@@ -27,9 +29,15 @@ namespace Ui.Services
                 var responseData = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<T>(responseData);
             }
-            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused") || ex.Message.Contains("connection"))
             {
+                _logger.LogError(ex, "Failed to connect to API server at {BaseAddress}", _httpClient.BaseAddress);
                 throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during GET request to {Endpoint}", endpoint);
+                throw;
             }
         }
 
@@ -45,7 +53,7 @@ namespace Ui.Services
                 {
                     // Log or inspect the error response content
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error: {response.StatusCode}, Response: {errorContent}");
+                    _logger.LogError("API returned error: {StatusCode}, Response: {ErrorContent}", response.StatusCode, errorContent);
 
                     // Throw an exception or return default (can be customized based on your needs)
                     throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
@@ -54,9 +62,15 @@ namespace Ui.Services
                 var responseData = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<T>(responseData);
             }
-            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused") || ex.Message.Contains("connection"))
             {
+                _logger.LogError(ex, "Failed to connect to API server at {BaseAddress}", _httpClient.BaseAddress);
                 throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during POST request to {Endpoint}", endpoint);
+                throw;
             }
         }
 
@@ -72,9 +86,15 @@ namespace Ui.Services
                 var responseData = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<T>(responseData);
             }
-            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused") || ex.Message.Contains("connection"))
             {
+                _logger.LogError(ex, "Failed to connect to API server at {BaseAddress}", _httpClient.BaseAddress);
                 throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during PUT request to {Endpoint}", endpoint);
+                throw;
             }
         }
 
@@ -86,9 +106,15 @@ namespace Ui.Services
                 var response = await _httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException ex) when (ex.Message.Contains("refused"))
+            catch (HttpRequestException ex) when (ex.Message.Contains("refused") || ex.Message.Contains("connection"))
             {
+                _logger.LogError(ex, "Failed to connect to API server at {BaseAddress}", _httpClient.BaseAddress);
                 throw new HttpRequestException($"Unable to connect to API server. Please ensure the WebAPI project is running on {_httpClient.BaseAddress}", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during DELETE request to {Endpoint}", endpoint);
+                throw;
             }
         }
     }

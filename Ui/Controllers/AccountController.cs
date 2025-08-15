@@ -12,11 +12,15 @@ namespace Ui.Controllers
     {
         IUserService _userService;
         private readonly GenericApiClient _apiClient;
-        public AccountController(IUserService userService, GenericApiClient apiClient)
+        private readonly ILogger<AccountController> _logger;
+        
+        public AccountController(IUserService userService, GenericApiClient apiClient, ILogger<AccountController> logger)
         {
             _userService = userService;
             _apiClient = apiClient;
+            _logger = logger;
         }
+        
         public IActionResult Login()
         {
             return View();
@@ -38,36 +42,61 @@ namespace Ui.Controllers
             var result = await _userService.LoginAsync(user);
             if (result.Success)
             {
-                // Call the login API using the generic client
-                LoginApiModel apiResult = await _apiClient.PostAsync<LoginApiModel>("api/auth/login", user);
-
-                if (apiResult == null)
+                try
                 {
-                    ModelState.AddModelError(string.Empty, "API error: Unable to process login.");
+                    // Call the login API using the generic client
+                    LoginApiModel apiResult = await _apiClient.PostAsync<LoginApiModel>("api/auth/login", user);
+
+                    if (apiResult == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "API error: Unable to process login.");
+                        return View(user);
+                    }
+
+                    var accessToken = apiResult?.AccessToken?.ToString();
+
+                    if (string.IsNullOrEmpty(accessToken))
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View(user);
+                    }
+                    
+                    // Store the access token in the cookie (for subsequent requests)
+                    Response.Cookies.Append("AccessToken", accessToken, new CookieOptions
+                    {
+                        HttpOnly = false,
+                        Secure = true,
+                        Expires = DateTime.UtcNow.AddMinutes(15)  // Adjust token expiry based on your needs
+                    });
+
+                    var dbUser = await _userService.GetUserByEmailAsync(user.Email);
+
+                    if (dbUser.Role.ToLower() == "admin")
+                        return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
+                    else
+                        return RedirectToRoute(new { controller = "Home", action = "Index" });
+                }
+                catch (HttpRequestException ex) when (ex.Message.Contains("Unable to connect to API server"))
+                {
+                    _logger.LogWarning(ex, "API server is not available, continuing with local authentication only");
+                    
+                    // API is not available, but local authentication succeeded
+                    // You can choose to continue without API integration or show a warning
+                    TempData["Warning"] = "API server is currently unavailable. Some features may be limited.";
+                    
+                    var dbUser = await _userService.GetUserByEmailAsync(user.Email);
+
+                    if (dbUser.Role.ToLower() == "admin")
+                        return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
+                    else
+                        return RedirectToRoute(new { controller = "Home", action = "Index" });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Unexpected error during API login for user {Email}", user.Email);
+                    ModelState.AddModelError(string.Empty, "An error occurred during login. Please try again.");
                     return View(user);
                 }
-
-                var accessToken = apiResult?.AccessToken.ToString();
-
-                if (string.IsNullOrEmpty(accessToken))
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(user);
-                }
-                // Store the access token in the cookie (for subsequent requests)
-                Response.Cookies.Append("AccessToken", accessToken, new CookieOptions
-                {
-                    HttpOnly = false,
-                    Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(15)  // Adjust token expiry based on your needs
-                });
-
-                var dbUser = await _userService.GetUserByEmailAsync(user.Email);
-
-                if (dbUser.Role.ToLower() == "admin")
-                    return RedirectToRoute(new { area = "admin", controller = "Home", action = "Index" });
-                else
-                    return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
             else
                 return View();

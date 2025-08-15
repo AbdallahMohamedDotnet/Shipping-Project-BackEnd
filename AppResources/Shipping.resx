@@ -129,4 +129,40 @@
   <data name="ShippingTypes" xml:space="preserve">
     <value>Shipping Types</value>
   </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Please enter a valid email address</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>Password must be at least 6 characters long</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>Confirm password is required</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Password and confirm password do not match</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>First name is required</value>
+  </data>
+  <data name="FirstNameMaxLength" xml:space="preserve">
+    <value>First name cannot exceed 50 characters</value>
+  </data>
+  <data name="LastNameRequired" xml:space="preserve">
+    <value>Last name is required</value>
+  </data>
+  <data name="LastNameMaxLength" xml:space="preserve">
+    <value>Last name cannot exceed 50 characters</value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>Phone number is required</value>
+  </data>
+  <data name="InvalidPhone" xml:space="preserve">
+    <value>Please enter a valid phone number</value>
+  </data>
 </root>
