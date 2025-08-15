@@ -19,12 +19,12 @@ namespace BL.Mapping
             CreateMap<TbPaymentMethod, DTOPaymentMethod>().ReverseMap();
             CreateMap<TbSetting, DTOSetting>().ReverseMap();
             CreateMap<TbShippingType, DTOShippingType>().ReverseMap();
-            CreateMap<TbShippment, DTOShippment>().ReverseMap();
+            CreateMap<TbShipment, DTOShippment>().ReverseMap();
             CreateMap<TbRefreshTokens, DTORefreshToken>().ReverseMap();
-            CreateMap<TbShippmentStatus, DTOShippmentStatus>().ReverseMap();
+            CreateMap<TbShipmentStatus, DTOShippmentStatus>().ReverseMap();
             CreateMap<TbSubscriptionPackage, DTOSubscriptionPackage>().ReverseMap();
             CreateMap<TbUserReceiver, DTOUserReceiver>().ReverseMap();
-            CreateMap<TbUserSebder, DTOUserSebder>().ReverseMap();
+            CreateMap<TbUserSender, DTOUserSender>().ReverseMap();
             CreateMap<TbUserSubscription, DTOUserSubscription>().ReverseMap();
             // Add mapping for VwCities to DTOCity (view to DTO mapping)
             CreateMap<VwCities, DTOCity>()

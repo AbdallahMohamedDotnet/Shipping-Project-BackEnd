@@ -11,5 +11,5 @@ public partial class TbShippingType : BaseTable
 
     public double ShippingFactor { get; set; }
 
-    public virtual ICollection<TbShippment> TbShippments { get; set; } = new List<TbShippment>();
+    public virtual ICollection<TbShipment> TbShippments { get; set; } = new List<TbShipment>();
 }

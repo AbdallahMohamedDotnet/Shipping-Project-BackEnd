@@ -36,8 +36,8 @@ namespace WebApi.Services
                 Errors = result.Errors?.Select(e => e.Description)
             };
         }
-
-        public async Task<DTOUserResult> LoginAsync(DTOUser loginDto)
+        
+        public async Task<DTOUserResult> LoginAsync(DTOLogin loginDto)
         {
             var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, false, false);
 

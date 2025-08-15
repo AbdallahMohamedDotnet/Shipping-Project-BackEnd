@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domains;
 
-public partial class TbShippmentStatus : BaseTable 
+public partial class TbShipmentStatus : BaseTable 
 {
 
 
@@ -19,5 +19,5 @@ public partial class TbShippmentStatus : BaseTable
 
     public virtual TbCarrier Carrier { get; set; } = null!;
 
-    public virtual TbShippment? Shippment { get; set; }
+    public virtual TbShipment? Shippment { get; set; }
 }

@@ -30,15 +30,15 @@ public partial class ShippingContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<TbShippingType> TbShippingTypes { get; set; }
 
-    public virtual DbSet<TbShippment> TbShippments { get; set; }
+    public virtual DbSet<TbShipment> TbShippments { get; set; }
 
-    public virtual DbSet<TbShippmentStatus> TbShippmentStatuses { get; set; }
+    public virtual DbSet<TbShipmentStatus> TbShippmentStatuses { get; set; }
 
     public virtual DbSet<TbSubscriptionPackage> TbSubscriptionPackages { get; set; }
 
     public virtual DbSet<TbUserReceiver> TbUserReceivers { get; set; }
 
-    public virtual DbSet<TbUserSebder> TbUserSebders { get; set; }
+    public virtual DbSet<TbUserSender> TbUserSebders { get; set; }
 
     public virtual DbSet<TbUserSubscription> TbUserSubscriptions { get; set; }
 
@@ -128,12 +128,12 @@ public partial class ShippingContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<TbShippment>(entity =>
+        modelBuilder.Entity<TbShipment>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.PackageValue).HasColumnType("decimal(8, 4)");
-            entity.Property(e => e.ShippingDate).HasColumnType("datetime");
+            entity.Property(e => e.ShipingDate).HasColumnType("datetime");
             entity.Property(e => e.ShippingRate).HasColumnType("decimal(8, 4)");
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
@@ -157,7 +157,7 @@ public partial class ShippingContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK_TbShippments_TbShippingTypes");
         });
 
-        modelBuilder.Entity<TbShippmentStatus>(entity =>
+        modelBuilder.Entity<TbShipmentStatus>(entity =>
         {
             entity.ToTable("TbShippmentStatus");
 
@@ -170,7 +170,7 @@ public partial class ShippingContext : IdentityDbContext<ApplicationUser>
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbShippmentStatus_TbCarriers");
 
-            entity.HasOne(d => d.Shippment).WithMany(p => p.TbShippmentStatuses)
+            entity.HasOne(d => d.Shippment).WithMany(p => p.TbShipmentStatus)
                 .HasForeignKey(d => d.ShippmentId)
                 .HasConstraintName("FK_TbShippmentStatus_TbShippments");
         });
@@ -199,7 +199,7 @@ public partial class ShippingContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK_TbUserReceivers_TbCities");
         });
 
-        modelBuilder.Entity<TbUserSebder>(entity =>
+        modelBuilder.Entity<TbUserSender>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Address).HasMaxLength(500);

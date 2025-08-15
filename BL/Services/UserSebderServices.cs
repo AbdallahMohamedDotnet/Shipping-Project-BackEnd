@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 namespace BL.Services
-{    public class UserSebderServices : BaseServices<Domains.TbUserSebder , DTOUserSebder>, Contracts.IUserSebder
+{    public class UserSebderServices : BaseServices<Domains.TbUserSender, DTOUserSender>, Contracts.IUserSender
     {
-        public UserSebderServices(ITableRepository<TbUserSebder> repo , IMapper mapper , IUserService userService) : base(repo , mapper, userService)
+        public UserSebderServices(ITableRepository<TbUserSender> repo , IMapper mapper , IUserService userService) : base(repo , mapper, userService)
         {
             
         }

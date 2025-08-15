@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BL.DTOConfiguration.Base;
 namespace BL.DTOConfiguration;
 
-public partial class DTOUserSebder : BaseDTO
+public partial class DTOUserSender : BaseDTO
 {
 
 
@@ -18,6 +18,8 @@ public partial class DTOUserSebder : BaseDTO
     public Guid CityId { get; set; }
 
     public string Address { get; set; } = null!;
-
+    public string? PostalCode { get; set; }
+    public string Contact { get; set; }
+    public string? OtherAddress { get; set; }
 
 }

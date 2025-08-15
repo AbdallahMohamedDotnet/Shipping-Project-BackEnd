@@ -3,17 +3,18 @@ using System.Collections.Generic;
 
 namespace Domains;
 
-public partial class TbShippment : BaseTable
+public partial class TbShipment : BaseTable
 {
 
 
-    public DateTime ShippingDate { get; set; }
-
+    public DateTime ShipingDate { get; set; }
+    public DateTime DelivryDate { get; set; }
     public Guid SenderId { get; set; }
 
     public Guid ReceiverId { get; set; }
 
     public Guid ShippingTypeId { get; set; }
+    public Guid? ShipingPackgingId { get; set; }
 
     public double Width { get; set; }
 
@@ -35,15 +36,13 @@ public partial class TbShippment : BaseTable
 
     public Guid? ReferenceId { get; set; }
 
-
-
     public virtual TbPaymentMethod? PaymentMethod { get; set; }
 
     public virtual TbUserReceiver Receiver { get; set; } = null!;
 
-    public virtual TbUserSebder Sender { get; set; } = null!;
+    public virtual TbUserSender Sender { get; set; } = null!;
 
     public virtual TbShippingType ShippingType { get; set; } = null!;
-
-    public virtual ICollection<TbShippmentStatus> TbShippmentStatuses { get; set; } = new List<TbShippmentStatus>();
+    public virtual TbShipingPackging ShipingPackging { get; set; } = null!;
+    public virtual ICollection<TbShipmentStatus> TbShipmentStatus { get; set; } = new List<TbShipmentStatus>();
 }

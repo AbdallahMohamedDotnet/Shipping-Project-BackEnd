@@ -18,6 +18,8 @@ public partial class DTOUserReceiver : BaseDTO
     public Guid CityId { get; set; }
 
     public string Address { get; set; } = null!;
-
+    public string? PostalCode { get; set; }
+    public string Contact { get; set; }
+    public string? OtherAddress { get; set; }
 
 }
