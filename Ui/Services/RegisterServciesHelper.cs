@@ -1,16 +1,20 @@
-﻿using BL.Mapping;
+﻿using BL.Contract;
+using BL.Contract.Shipment;
+using BL.Contracts;
+using BL.Mapping;
 using BL.Services;
+using BL.Services.Shipment;
+using DAL;
 using DAL.Contracts;
 using DAL.Repositories;
-using DAL;
+using DAL.UserModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Serilog;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using DAL.UserModels;
-using Microsoft.AspNetCore.Identity;
 using System.Net.Http.Headers;
-using BL.Contracts;
+using WebApi.Services;
 namespace Ui.Services
 {
     public class RegisterServciesHelper
@@ -67,14 +71,25 @@ namespace Ui.Services
             builder.Services.AddScoped<BL.Mapping.IMapper, BL.Mapping.AutoMapper>();
 
             //builder.Services.AddScoped<IGenericRepository<TbShippingType>, DAL.Repositories.GenericRepository<TbShippingType>>();
-            builder.Services.AddScoped<GenericApiClient>();
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
             builder.Services.AddScoped(typeof(IViewRepository<>), typeof(ViewRepository<>));
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
             builder.Services.AddScoped<ICountry, CountryServices>();
             builder.Services.AddScoped<ICity, CityServices>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPaymentMethodServices, PaymentMethodServices>();
+            //builder.Services.AddScoped<IPackgingTypes, ShipingPackgingService>();
+            builder.Services.AddScoped<IUserSender, UserSenderServices>();
+            builder.Services.AddScoped<IUserReceiver, UserReceiverServices>();
+
+            builder.Services.AddScoped<IShipment, ShipmentService>();
+            builder.Services.AddScoped<ITrackingNumberCreator, TrackingNumberCreatorService>();
+            builder.Services.AddScoped<IRateCalculator, RateCalculatorService>();
+
+            builder.Services.AddSingleton<TokenService>();
             builder.Services.AddScoped<IRefreshTokens, RefreshTokenService>();
+
         }
     }
 }

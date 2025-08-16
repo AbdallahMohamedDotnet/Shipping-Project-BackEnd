@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace BL.Services
 {
-    public class ShippmentServices : BaseServices<Domains.TbShipment , DTOShippment>, BL.Contracts.IShippment
+    public class ShippmentServices : BaseServices<Domains.TbShipment , DTOShipment>, BL.Contracts.IShippment
     {
         public ShippmentServices(ITableRepository<TbShipment> repo , IMapper Mapper, IUserService userService) : base(repo , Mapper, userService)
         {

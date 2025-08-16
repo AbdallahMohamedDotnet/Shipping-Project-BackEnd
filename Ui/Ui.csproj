@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AppResources\AppResources.csproj" />
     <ProjectReference Include="..\BL\BL.csproj" />
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,14 @@
 ﻿using BL.DTOConfiguration;
-using Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Contracts
+namespace BL.Contract.Shipment
 {
-    public interface IShippment : IBaseService<TbShipment, DTOShippment>
+    public interface ITrackingNumberCreator
     {
-
+        public double Create(DTOShipment DTO);
     }
 }
