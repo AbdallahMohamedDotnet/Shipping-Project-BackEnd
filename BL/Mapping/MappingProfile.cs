@@ -19,7 +19,7 @@ namespace BL.Mapping
             CreateMap<TbPaymentMethod, DTOPaymentMethod>().ReverseMap();
             CreateMap<TbSetting, DTOSetting>().ReverseMap();
             CreateMap<TbShippingType, DTOShippingType>().ReverseMap();
-            CreateMap<TbShipment, DTOShippment>().ReverseMap();
+            CreateMap<TbShipment, DTOShipment>().ReverseMap();
             CreateMap<TbRefreshTokens, DTORefreshToken>().ReverseMap();
             CreateMap<TbShipmentStatus, DTOShippmentStatus>().ReverseMap();
             CreateMap<TbSubscriptionPackage, DTOSubscriptionPackage>().ReverseMap();
