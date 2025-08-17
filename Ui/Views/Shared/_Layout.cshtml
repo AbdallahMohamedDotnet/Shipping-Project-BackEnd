@@ -41,8 +41,16 @@
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="~/assets/css/responsive.css">
 
+    <!-- Theme System CSS -->
+    <link rel="stylesheet" href="~/css/themes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme-extensions.css" asp-append-version="true" />
+
     <!-- RTL CSS -->
     <!-- <link rel="stylesheet" href="~/assets/css/rtl.css"> -->
+    
+    <!-- Theme color meta tag for mobile browsers -->
+    <meta name="theme-color" content="#ffffff" />
+    
     <!-- jQuery -->
     <script src="~/assets/js/jquery-3.4.1.min.js"></script>
 </head>
@@ -220,6 +228,7 @@
     <!-- Start scroll top -->
     <div class="scrollup"><i class="fas fa-chevron-up"></i></div>
     <!-- End scroll top -->
+    
     <!-- Tether JS -->
     <script src="~/assets/js/tether.min.js"></script>
 
@@ -263,6 +272,10 @@
 
     <!-- Active JS -->
     <script src="~/assets/js/active.js"></script>
+    
+    <!-- Theme Manager JS -->
+    <script src="~/js/theme-manager.js" asp-append-version="true"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

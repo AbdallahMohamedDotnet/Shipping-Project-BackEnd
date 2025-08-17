@@ -19,8 +19,15 @@
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="~/admin/css/demo_1/style.css">
+    <!-- Theme System CSS -->
+    <link rel="stylesheet" href="~/css/themes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme-extensions.css" asp-append-version="true" />
     <!-- End layout styles -->
     <link rel="shortcut icon" href="~/admin/images/favicon.png" />
+    
+    <!-- Theme color meta tag for mobile browsers -->
+    <meta name="theme-color" content="#ffffff" />
+    
     @RenderSection("Styles", false)
 </head>
 <body>
@@ -64,6 +71,12 @@
                     </form>
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
+                    <!-- Theme Toggle in Navbar -->
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="#" id="navbar-theme-toggle" title="Toggle Theme">
+                            <i class="mdi mdi-weather-night" id="navbar-theme-icon"></i>
+                        </a>
+                    </li>
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img">
@@ -222,6 +235,7 @@
                         <div class="tiles dark"></div>
                         <div class="tiles default"></div>
                     </div>
+                    <!-- Theme options will be dynamically added here by theme-manager.js -->
                 </div>
                 <div id="layout-settings" class="settings-panel">
                     <i class="settings-close mdi mdi-close"></i>
@@ -761,6 +775,7 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+    
     <!-- plugins:js -->
     <script src="~/admin/vendors/js/vendor.bundle.base.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -780,6 +795,48 @@
     <!-- Custom js for this page -->
     <script src="~/admin/js/dashboard.js"></script>
     <script src="~/app/shared/alers.js"></script>
-    @RenderSection("Scripts", false);
+    
+    <!-- Theme Manager JS -->
+    <script src="~/js/theme-manager.js" asp-append-version="true"></script>
+    
+    <!-- Admin Theme Integration Script -->
+    <script>
+        // Admin-specific theme integration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add navbar theme toggle functionality
+            const navbarThemeToggle = document.getElementById('navbar-theme-toggle');
+            const navbarThemeIcon = document.getElementById('navbar-theme-icon');
+            
+            if (navbarThemeToggle && window.themeManager) {
+                navbarThemeToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.themeManager.toggleTheme();
+                });
+                
+                // Update navbar icon when theme changes
+                window.addEventListener('themechange', function(e) {
+                    if (navbarThemeIcon) {
+                        if (e.detail.theme === 'dark') {
+                            navbarThemeIcon.className = 'mdi mdi-weather-sunny';
+                        } else {
+                            navbarThemeIcon.className = 'mdi mdi-weather-night';
+                        }
+                    }
+                });
+                
+                // Set initial icon state
+                if (navbarThemeIcon && window.themeManager) {
+                    const currentTheme = window.themeManager.getCurrentTheme();
+                    if (currentTheme === 'dark') {
+                        navbarThemeIcon.className = 'mdi mdi-weather-sunny';
+                    } else {
+                        navbarThemeIcon.className = 'mdi mdi-weather-night';
+                    }
+                }
+            }
+        });
+    </script>
+    
+    @RenderSection("Scripts", false)
 </body>
 </html>

@@ -17,31 +17,44 @@ namespace BL.Services
 {
     public class ShipmentService : BaseServices<TbShipment, DTOShipment>, IShipment
     {
-        IUserReceiver _userReceiver;
-        IUserSender _userSender;
-        ITrackingNumberCreator _trackingCreator;
-        IRateCalculator _rateCalculator;
-        ITableRepository<TbShipment> _repo;
+        IUserReceiver userReceiver;
+        IUserSender userSender;
+        ITrackingNumberCreator trackingCreator;
+        IRateCalculator rateCalculator;
+        ITableRepository<TbShipment> repo;
         public ShipmentService(ITableRepository<TbShipment> repo, IMapper mapper,
              IUserService userService, IUserReceiver userReceiver,
              IUserSender userSender, ITrackingNumberCreator trackingCreator
             , IRateCalculator rateCalculator/*, IUnitOfWork uow*/) : base(repo, mapper, userService)
         {
-            this._repo = repo;
-            this._userReceiver = userReceiver;
-            this._userSender = userSender;
-            this._trackingCreator = trackingCreator;
-            this._rateCalculator = rateCalculator;
+            this.repo = repo;
+            this.userReceiver = userReceiver;
+            this.userSender = userSender;
+            this.trackingCreator = trackingCreator;
+            this.rateCalculator = rateCalculator;
         }
         public async Task Create(DTOShipment DTO)
         {
-            // create traking number 
-
-            // calculate the rate 
-
-            // save sender 
-
-            //save Receiver 
+            // create tracking number
+            DTO.TrackingNumber = trackingCreator.Create(DTO);
+            // calculate date
+            DTO.ShippingRate = rateCalculator.Calculate(DTO);
+            // save sender
+            if (DTO.SenderId == Guid.Empty)
+            {
+                Guid gSenderId = Guid.Empty;
+                userSender.Add(DTO.UserSender, out gSenderId);
+                DTO.SenderId = gSenderId;
+            }
+            // save receiver
+            if (DTO.ReceiverId == Guid.Empty)
+            {
+                Guid gReciverId = Guid.Empty;
+                userReceiver.Add(DTO.UserReceiver, out gReciverId);
+                DTO.ReceiverId = gReciverId;
+            }
+            // save shipment
+            this.Add(DTO);
         }
     }
 }

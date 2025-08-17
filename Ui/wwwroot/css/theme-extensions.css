@@ -1,0 +1,428 @@
+/* Extended theme styles for better integration with existing components */
+
+/* Admin area specific theme styling */
+[data-theme="dark"] .admin-area {
+  background-color: var(--bg-primary);
+}
+
+/* Admin theme integration styles */
+[data-theme="dark"] .theme-option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .theme-option.selected {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .settings-panel {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .settings-heading {
+  color: var(--text-primary);
+}
+
+/* Navigation menu theme adjustments */
+[data-theme="dark"] .slicknav_nav {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .slicknav_nav a {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .slicknav_nav li:hover a,
+[data-theme="dark"] .slicknav_nav li:hover .slicknav_row {
+  background-color: var(--nav-hover-bg);
+  color: var(--nav-hover-text);
+}
+
+/* Blog and content area theme adjustments */
+[data-theme="dark"] .blog-post-by ul li span,
+[data-theme="dark"] .news-post-by span {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .readmore-btn {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .readmore-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Service icons and content */
+[data-theme="dark"] .service-icon .fa,
+[data-theme="dark"] .why-choose-us-icon i.fa,
+[data-theme="dark"] .why-choose-us-icon i.fas,
+[data-theme="dark"] .why-choose-us-icon i.far {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Counter and statistics */
+[data-theme="dark"] .counter-block {
+  background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .counter-block p {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] span.counter-icon {
+  background-color: var(--primary-color);
+}
+
+/* Process steps */
+[data-theme="dark"] .process-icon {
+  background-color: var(--card-bg);
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .process-step p {
+  color: var(--text-primary);
+}
+
+/* Testimonials */
+[data-theme="dark"] .testimonial {
+  background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .testimonial-item {
+  color: var(--text-light);
+}
+
+/* Forms and inputs in dark theme */
+[data-theme="dark"] .quote-form .form-control {
+  background-color: var(--form-bg);
+  border-color: var(--form-border);
+  color: var(--form-text);
+}
+
+[data-theme="dark"] .newsletter .news-input {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .newsletter .news-btn {
+  background-color: var(--primary-color);
+}
+
+/* Tables */
+[data-theme="dark"] table.table {
+  border-color: var(--border-light);
+  background-color: var(--card-bg);
+}
+
+[data-theme="dark"] table.table tr th {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] table.table tr td {
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] table.table tr:nth-child(odd) td {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] table.table tr:nth-child(even) td {
+  background-color: var(--bg-tertiary);
+}
+
+/* Breadcrumbs */
+[data-theme="dark"] .wshipping-breadcroumb {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .wshipping-breadcroumb h1,
+[data-theme="dark"] .wshipping-breadcroumb h4 {
+  color: var(--text-primary);
+}
+
+/* Sidebar and navigation */
+[data-theme="dark"] .left-menu ul li a {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .left-menu ul li a:hover,
+[data-theme="dark"] .left-menu ul li.active a {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Chat system */
+[data-theme="dark"] .chatbox {
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 20px var(--shadow-dark);
+}
+
+[data-theme="dark"] .chatbox__title {
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .chatbox__body,
+[data-theme="dark"] .chatbox__credentials {
+  background-color: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .chatbox__body__message p {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .chatbox__message {
+  background-color: var(--form-bg);
+  border-color: var(--form-border);
+  color: var(--form-text);
+}
+
+/* Pagination */
+[data-theme="dark"] .page-navigation .pagination > li > a {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .page-navigation .pagination > li > a:hover,
+[data-theme="dark"] .page-navigation .pagination > li.pagin-active > a {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border-color: var(--primary-color);
+}
+
+/* Accordion */
+[data-theme="dark"] .page-accordion {
+  background-color: var(--card-bg);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .page-accordion h5 a {
+  color: var(--primary-color);
+  background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .page-accordion h5 a.collapsed {
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .page-accordion .card-block {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+/* Media and gallery */
+[data-theme="dark"] .pGallery-wrapper .freight-caption {
+  background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .pGallery-wrapper .label-text {
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .pGallery-wrapper .label-text a {
+  color: var(--text-light);
+}
+
+/* Address and contact forms */
+[data-theme="dark"] .address h3 {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+[data-theme="dark"] .address-block {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .address-block ul li:before {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .address-block ul li a {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] .address-block ul li a:hover {
+  color: var(--text-primary);
+}
+
+/* Error pages */
+[data-theme="dark"] .error-section h2 {
+  color: var(--text-primary);
+}
+
+/* Login and registration */
+[data-theme="dark"] .customer-login-block {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .customer-login-block h2 {
+  color: var(--text-primary);
+}
+
+/* Theme toggle enhancements for mobile */
+@media (max-width: 768px) {
+  .theme-toggle {
+    right: 10px;
+    bottom: 20px;
+    top: auto;
+  }
+}
+
+/* Ensure theme toggle is always visible */
+.theme-toggle {
+  z-index: 9999;
+}
+
+/* Additional theme-specific button styles */
+[data-theme="dark"] .custom-btn {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+}
+
+[data-theme="dark"] .custom-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Dark theme overrides for specific color classes */
+[data-theme="dark"] .cbtn-white {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Scroll to top button */
+[data-theme="dark"] .scrollup {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .scrollup:hover {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Coming soon page */
+[data-theme="dark"] .coming-soon-contact {
+  background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .coming-soon-contact h3 {
+  color: var(--text-primary);
+}
+
+/* Quote sections */
+[data-theme="dark"] .right-quote-from {
+  background-color: var(--card-bg);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .right-quote-from h3 {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Team sections */
+[data-theme="dark"] .team-block {
+  background-color: var(--card-bg);
+  border-color: var(--border-light);
+}
+
+[data-theme="dark"] .team-text h5 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .team-text p {
+  color: var(--text-secondary);
+}
+
+/* Footer logo adjustments for dark theme */
+[data-theme="dark"] .footer-wiz h3.footer-logo {
+  color: var(--footer-heading);
+}
+
+/* Ensure primary color elements remain consistent */
+[data-theme="dark"] .fa,
+[data-theme="dark"] .fas,
+[data-theme="dark"] .far {
+  color: inherit;
+}
+
+/* Primary color icons should remain primary */
+[data-theme="dark"] .top-contact i.fa,
+[data-theme="dark"] .top-contact i.far,
+[data-theme="dark"] .footer-contact li i.fa {
+  color: var(--primary-color);
+}
+
+/* Text colors for headings in dark theme */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: var(--text-primary);
+}
+
+/* Ensure links are properly colored */
+[data-theme="dark"] a {
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] a:hover {
+  color: var(--primary-light);
+  text-decoration: none;
+}
+
+/* Override for footer links */
+[data-theme="dark"] .footer-top-area a {
+  color: var(--footer-text);
+}
+
+[data-theme="dark"] .footer-top-area a:hover {
+  color: var(--primary-color);
+}
+
+/* Additional mobile responsive adjustments */
+@media (max-width: 991px) {
+  .theme-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  #theme-notification {
+    right: 15px !important;
+    left: 15px !important;
+    transform: translateY(100px) !important;
+  }
+  
+  #theme-notification.show {
+    transform: translateY(0) !important;
+  }
+}
