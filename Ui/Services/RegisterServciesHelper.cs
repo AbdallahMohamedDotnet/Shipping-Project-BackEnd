@@ -32,6 +32,9 @@ namespace Ui.Services
                 client.Timeout = TimeSpan.FromSeconds(30);
             });
 
+            // Register GenericApiClient service
+            builder.Services.AddScoped<GenericApiClient>();
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
