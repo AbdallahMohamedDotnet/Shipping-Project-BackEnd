@@ -63,7 +63,21 @@ namespace DAL.Repositories
                 throw new DataAccessException(ex, "", Logger);
             }
         }
-
+        public bool Add(T entity , out Guid Id)
+        {
+            try
+            {
+                entity.CreatedDate = DateTime.Now;
+                DbSet.Add(entity);
+                Context.SaveChanges();
+                Id = entity.Id;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", Logger);
+            }
+        }
         public bool Update(T entity)
         {
             try

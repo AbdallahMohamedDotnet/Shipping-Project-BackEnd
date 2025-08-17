@@ -45,6 +45,13 @@ namespace BL.Services
             dbobject.CurrentState = 1; 
             return repo.Add(dbobject);
         }
+        public bool Add(DTO entity, out Guid id)
+        {
+            var dbObject = mapper.Map<DTO, T>(entity);
+            dbObject.CreatedBy = userService.GetLoggedInUser();
+            dbObject.CurrentState = 1;
+            return repo.Add(dbObject, out id);
+        }
 
         public bool Update(DTO entity)
         {

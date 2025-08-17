@@ -35,8 +35,13 @@ namespace BL.Services
         }
         public async Task Create(DTOShipment DTO)
         {
+            // create traking number 
 
+            // calculate the rate 
 
+            // save sender 
+
+            //save Receiver 
         }
     }
 }
