@@ -1,4 +1,4 @@
-# Light and Dark Theme System Documentation
+﻿# Light and Dark Theme System Documentation
 
 ## Overview
 
@@ -6,23 +6,23 @@ This website now includes a comprehensive light and dark theme system that works
 
 ## Features
 
-### ?? **Automatic Theme Detection**
+### 🎨 **Automatic Theme Detection**
 - Detects the user's system preference (light/dark mode)
 - Respects the user's choice and saves it in localStorage
 - Applies the preferred theme on subsequent visits
 
-### ?? **Multiple Ways to Switch Themes**
+### 🔄 **Multiple Ways to Switch Themes**
 1. **Floating Toggle Button**: A circular button with sun/moon icons (right side of screen)
 2. **Keyboard Shortcut**: `Ctrl/Cmd + Shift + D`
 3. **Navigation Menu**: Theme toggle added to main navigation
 4. **Admin Panel**: Integrated with existing admin settings panel
 
-### ?? **Responsive Design**
+### 📱 **Responsive Design**
 - Theme toggle button adapts to different screen sizes
 - Mobile-optimized positioning and sizing
 - Touch-friendly interface elements
 
-### ? **Accessibility Features**
+### ♿ **Accessibility Features**
 - Screen reader announcements for theme changes
 - Proper ARIA labels and keyboard navigation
 - High contrast ratios in both themes
@@ -34,8 +34,8 @@ This website now includes a comprehensive light and dark theme system that works
 
 #### Method 1: Floating Toggle Button
 - Look for the circular button on the right side of your screen
-- Click the ?? (moon) icon to switch to dark mode
-- Click the ?? (sun) icon to switch to light mode
+- Click the 🌙 (moon) icon to switch to dark mode
+- Click the ☀️ (sun) icon to switch to light mode
 
 #### Method 2: Keyboard Shortcut
 - Press `Ctrl + Shift + D` (Windows/Linux) or `Cmd + Shift + D` (Mac)
@@ -141,11 +141,11 @@ Edit the CSS custom properties in `themes.css` to change the color scheme:
 
 ```
 Ui/wwwroot/
-??? css/
-?   ??? themes.css           # Main theme variables and base styles
-?   ??? theme-extensions.css # Extended theme support for all components
-??? js/
-    ??? theme-manager.js     # Theme management JavaScript
+├── css/
+│   ├── themes.css           # Main theme variables and base styles
+│   └── theme-extensions.css # Extended theme support for all components
+└── js/
+    └── theme-manager.js     # Theme management JavaScript
 ```
 
 ## Browser Support
@@ -196,4 +196,4 @@ For technical issues or questions about the theme system:
 
 ---
 
-**Note**: This theme system is designed to be accessible, performant, and easy to maintain. All color combinations have been tested for WCAG 2.1 AA compliance.
+**Note**: This theme system is designed to be accessible, performant, and easy to maintain. All color combinations have been tested for WCAG 2.1 AA compliance

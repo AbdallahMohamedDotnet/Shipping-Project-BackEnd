@@ -37,16 +37,53 @@ class ThemeManager {
 
     applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
+        document.body.setAttribute('data-theme', theme);
         this.currentTheme = theme;
         this.updateThemeToggle();
         
         // Update meta theme-color for mobile browsers
         this.updateMetaThemeColor(theme);
         
+        // Apply admin-specific theme changes
+        this.applyAdminTheme(theme);
+        
         // Dispatch custom event for theme change
         window.dispatchEvent(new CustomEvent('themechange', { 
             detail: { theme: theme } 
         }));
+    }
+
+    applyAdminTheme(theme) {
+        // Apply theme to admin specific elements that might not be covered by CSS
+        const body = document.body;
+        
+        // Handle admin sidebar theme synchronization
+        if (theme === 'dark') {
+            body.classList.add('sidebar-dark');
+            body.classList.remove('sidebar-light');
+        } else {
+            body.classList.add('sidebar-light');
+            body.classList.remove('sidebar-dark');
+        }
+        
+        // Update admin setting panel state
+        this.updateAdminSettingsState(theme);
+    }
+
+    updateAdminSettingsState(theme) {
+        // Update sidebar theme options in admin panel
+        const sidebarLightOption = document.getElementById('sidebar-light-theme');
+        const sidebarDarkOption = document.getElementById('sidebar-dark-theme');
+        
+        if (sidebarLightOption && sidebarDarkOption) {
+            if (theme === 'dark') {
+                sidebarLightOption.classList.remove('selected');
+                sidebarDarkOption.classList.add('selected');
+            } else {
+                sidebarDarkOption.classList.remove('selected');
+                sidebarLightOption.classList.add('selected');
+            }
+        }
     }
 
     updateMetaThemeColor(theme) {
@@ -178,6 +215,22 @@ class ThemeManager {
                 this.setTheme(e.detail.theme);
             }
         });
+
+        // Admin-specific event bindings
+        this.bindAdminEvents();
+    }
+
+    bindAdminEvents() {
+        // Bind existing admin sidebar theme options
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#sidebar-light-theme')) {
+                e.preventDefault();
+                this.setTheme('light');
+            } else if (e.target.closest('#sidebar-dark-theme')) {
+                e.preventDefault();
+                this.setTheme('dark');
+            }
+        });
     }
 
     // Method to add theme toggle to navigation menu
@@ -217,6 +270,9 @@ class ThemeManager {
     integrateWithAdminPanel() {
         const adminThemeSettings = document.getElementById('theme-settings');
         if (!adminThemeSettings) return;
+
+        // Check if theme mode section already exists
+        if (document.querySelector('.theme-mode-options')) return;
 
         const themeToggleSection = document.createElement('div');
         themeToggleSection.innerHTML = `
@@ -287,6 +343,62 @@ class ThemeManager {
         });
     }
 
+    // Method to ensure theme consistency across page loads
+    ensureThemeConsistency() {
+        // Force reapplication of theme after page load
+        setTimeout(() => {
+            this.applyTheme(this.currentTheme);
+        }, 100);
+        
+        // Check if we're in admin area and apply specific styles
+        if (document.querySelector('.container-scroller') || document.querySelector('.admin-area')) {
+            this.applyAdminTheme(this.currentTheme);
+        }
+    }
+
+    // Method to fix any theme inconsistencies
+    fixThemeInconsistencies() {
+        // Remove any conflicting classes
+        document.body.classList.remove('sidebar-light', 'sidebar-dark');
+        
+        // Reapply correct theme
+        this.applyTheme(this.currentTheme);
+        
+        // Update all theme-related UI elements
+        this.updateAllThemeElements();
+    }
+
+    updateAllThemeElements() {
+        // Update navbar theme toggle
+        const navbarThemeIcon = document.getElementById('navbar-theme-icon');
+        if (navbarThemeIcon) {
+            if (this.currentTheme === 'dark') {
+                navbarThemeIcon.className = 'mdi mdi-weather-sunny';
+            } else {
+                navbarThemeIcon.className = 'mdi mdi-weather-night';
+            }
+        }
+
+        // Update main theme toggle
+        this.updateThemeToggle();
+        
+        // Update admin settings panel
+        this.updateAdminSettingsState(this.currentTheme);
+        
+        // Update menu theme options if they exist
+        const menuIcon = document.getElementById('menu-theme-icon');
+        const menuText = document.getElementById('menu-theme-text');
+        if (menuIcon && menuText) {
+            if (this.currentTheme === 'dark') {
+                menuIcon.className = 'fas fa-sun';
+                menuText.textContent = 'Light Mode';
+            } else {
+                menuIcon.className = 'fas fa-moon';
+                menuText.textContent = 'Dark Mode';
+            }
+        }
+    }
+
     // Utility method to check if dark mode is active
     isDarkMode() {
         return this.currentTheme === 'dark';
@@ -295,6 +407,12 @@ class ThemeManager {
     // Method to get current theme
     getCurrentTheme() {
         return this.currentTheme;
+    }
+
+    // Method to force theme refresh
+    refreshTheme() {
+        this.fixThemeInconsistencies();
+        this.ensureThemeConsistency();
     }
 }
 
@@ -314,7 +432,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Integrate with admin panel if it exists
     setTimeout(() => {
         window.themeManager.integrateWithAdminPanel();
-    }, 100);
+        window.themeManager.ensureThemeConsistency();
+    }, 200);
+    
+    // Additional delay to ensure all elements are loaded
+    setTimeout(() => {
+        window.themeManager.updateAllThemeElements();
+    }, 500);
 });
 
 // Export for use in other scripts
@@ -337,4 +461,10 @@ window.toggleTheme = function() {
 
 window.getCurrentTheme = function() {
     return window.themeManager ? window.themeManager.getCurrentTheme() : 'light';
+};
+
+window.refreshTheme = function() {
+    if (window.themeManager) {
+        window.themeManager.refreshTheme();
+    }
 };
