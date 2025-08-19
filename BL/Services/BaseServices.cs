@@ -16,9 +16,19 @@ namespace BL.Services
         private readonly ITableRepository<T> repo;
         private readonly AutoMapperCore.IMapper mapper;
         private readonly IUserService userService;
+        private readonly IUnitOfWork unitOfWork;
+        // Constructor for repository
         public BaseServices(ITableRepository<T> repo, AutoMapperCore.IMapper mapper , IUserService userService)
         {
             this.repo = repo;
+            this.mapper = mapper;
+            this.userService = userService;
+        }
+        // Constructor for unit of work
+        public BaseServices(IUnitOfWork unitOfWork, AutoMapperCore.IMapper mapper, IUserService userService)
+        {
+            this.unitOfWork = unitOfWork;
+            this.repo = unitOfWork.Repository<T>();
             this.mapper = mapper;
             this.userService = userService;
         }

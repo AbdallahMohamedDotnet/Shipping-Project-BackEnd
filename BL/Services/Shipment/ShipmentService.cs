@@ -17,44 +17,54 @@ namespace BL.Services
 {
     public class ShipmentService : BaseServices<TbShipment, DTOShipment>, IShipment
     {
-        IUserReceiver userReceiver;
-        IUserSender userSender;
-        ITrackingNumberCreator trackingCreator;
-        IRateCalculator rateCalculator;
-        ITableRepository<TbShipment> repo;
+        IUserReceiver _userReceiver;
+        IUserSender _userSender;
+        ITrackingNumberCreator _trackingCreator;
+        IRateCalculator _rateCalculator;
+        IUnitOfWork _uow;
         public ShipmentService(ITableRepository<TbShipment> repo, IMapper mapper,
              IUserService userService, IUserReceiver userReceiver,
              IUserSender userSender, ITrackingNumberCreator trackingCreator
-            , IRateCalculator rateCalculator/*, IUnitOfWork uow*/) : base(repo, mapper, userService)
+            , IRateCalculator rateCalculator, IUnitOfWork uow) : base(uow, mapper, userService)
         {
-            this.repo = repo;
-            this.userReceiver = userReceiver;
-            this.userSender = userSender;
-            this.trackingCreator = trackingCreator;
-            this.rateCalculator = rateCalculator;
+            _uow = uow;
+            _userReceiver = userReceiver;
+            _userSender = userSender;
+            _trackingCreator = trackingCreator;
+            _rateCalculator = rateCalculator;
         }
-        public async Task Create(DTOShipment DTO)
+
+        public async Task Create(DTOShipment dto)
         {
-            // create tracking number
-            DTO.TrackingNumber = trackingCreator.Create(DTO);
-            // calculate date
-            DTO.ShippingRate = rateCalculator.Calculate(DTO);
-            // save sender
-            if (DTO.SenderId == Guid.Empty)
+            try
             {
-                Guid gSenderId = Guid.Empty;
-                userSender.Add(DTO.UserSender, out gSenderId);
-                DTO.SenderId = gSenderId;
+                await _uow.BeginTransactionAsync();
+                // create tracking number
+                dto.TrackingNumber = _trackingCreator.Create(dto);
+                // calculate date
+                dto.ShippingRate = _rateCalculator.Calculate(dto);
+                // save sender
+                if (dto.SenderId == Guid.Empty)
+                {
+                    Guid gSenderId = Guid.Empty;
+                    _userSender.Add(dto.UserSender, out gSenderId);
+                    dto.SenderId = gSenderId;
+                }
+                // save receiver
+                if (dto.ReceiverId == Guid.Empty)
+                {
+                    Guid gReciverId = Guid.Empty;
+                    _userReceiver.Add(dto.UserReceiver, out gReciverId);
+                    dto.ReceiverId = gReciverId;
+                }
+                // save shipment
+                this.Add(dto);
+                await _uow.CommitAsync();
             }
-            // save receiver
-            if (DTO.ReceiverId == Guid.Empty)
+            catch (Exception ex)
             {
-                Guid gReciverId = Guid.Empty;
-                userReceiver.Add(DTO.UserReceiver, out gReciverId);
-                DTO.ReceiverId = gReciverId;
+                await _uow.RollbackAsync();
             }
-            // save shipment
-            this.Add(DTO);
         }
     }
 }

@@ -15,8 +15,8 @@ namespace BL.Services
     {
         private readonly IViewRepository<VwCities> ViewRepo;
         private readonly BL.Mapping.IMapper Mapper;
-        
-        public CityServices(ITableRepository<TbCity> repo, AutoMapperCore.IMapper autoMapper, IUserService userService, IViewRepository<VwCities> ViewRepo) : base(repo, autoMapper, userService)
+        private readonly IUnitOfWork unitOfWork;
+        public CityServices(ITableRepository<TbCity> repo, AutoMapperCore.IMapper autoMapper, IUserService userService, IViewRepository<VwCities> ViewRepo ) : base(repo, autoMapper, userService)
         {
             this.Mapper = new BL.Mapping.AutoMapper(autoMapper);
             this.ViewRepo = ViewRepo;
