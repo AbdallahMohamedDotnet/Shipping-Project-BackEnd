@@ -76,7 +76,7 @@ namespace Ui.Services
             //builder.Services.AddScoped<IGenericRepository<TbShippingType>, DAL.Repositories.GenericRepository<TbShippingType>>();
             builder.Services.AddScoped(typeof(ITableRepository<>), typeof(TableRepository<>));
             builder.Services.AddScoped(typeof(IViewRepository<>), typeof(ViewRepository<>));
-            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IShippingType, ShippingTypeServices>();
             builder.Services.AddScoped<ICountry, CountryServices>();
             builder.Services.AddScoped<ICity, CityServices>();
