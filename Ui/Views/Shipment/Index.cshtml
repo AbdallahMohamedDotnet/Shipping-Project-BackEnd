@@ -1,0 +1,241 @@
+@model List<BL.DTOConfiguration.DTOShipment>
+@{
+    ViewData["Title"] = "Shipments Management";
+}
+
+<!-- Breadcroumbs start -->
+<div class="wshipping-content-block breadcrumbs-block">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shipments</li>
+        </ol>
+    </div>
+</div>
+<!-- Breadcroumbs end -->
+
+<!-- Shipments List Start -->
+<div class="wshipping-content-block shipping-block">
+    <div class="container">
+        <h2 class="heading2-border mt0">Shipments Management</h2>
+        
+        @* Display success messages *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <a href="/Shipment/Create" class="btn btn-success btn-fw">
+                                    <i class="fa fa-plus"></i> Create New Shipment
+                                </a>
+                            </div>
+                        </div>
+                        
+                        @if (Model != null && Model.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover shipments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tracking Number</th>
+                                            <th>Shipping Date</th>
+                                            <th>Delivery Date</th>
+                                            <th>Sender</th>
+                                            <th>Receiver</th>
+                                            <th>Weight (kg)</th>
+                                            <th>Package Value</th>
+                                            <th>Shipping Rate</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var shipment in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (shipment.TrackingNumber.HasValue)
+                                                    {
+                                                        <strong>@shipment.TrackingNumber.Value.ToString("F0")</strong>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                                <td>@shipment.ShipingDate.ToString("MMM dd, yyyy")</td>
+                                                <td>@shipment.DelivryDate.ToString("MMM dd, yyyy")</td>
+                                                <td>
+                                                    @if (shipment.UserSender != null)
+                                                    {
+                                                        @shipment.UserSender.SenderName
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (shipment.UserReceiver != null)
+                                                    {
+                                                        @shipment.UserReceiver.ReceiverName
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                                <td>@shipment.Weight kg</td>
+                                                <td>$@shipment.PackageValue.ToString("F2")</td>
+                                                <td>$@shipment.ShippingRate.ToString("F2")</td>
+                                                <td>
+                                                    @if (shipment.CurrentState == 1)
+                                                    {
+                                                        <span class="badge badge-success">Active</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Inactive</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="/Shipment/Show/@shipment.Id" class="btn btn-info btn-sm">
+                                                            <i class="fa fa-eye"></i> View
+                                                        </a>
+                                                        <a href="/Shipment/Edit/@shipment.Id" class="btn btn-warning btn-sm">
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        @if (shipment.CurrentState == 1)
+                                                        {
+                                                            <button type="button" class="btn btn-danger btn-sm" 
+                                                                    data-id="@shipment.Id" 
+                                                                    data-tracking="@(shipment.TrackingNumber?.ToString("F0") ?? "Unknown")"
+                                                                    onclick="confirmDelete(this)">
+                                                                <i class="fa fa-trash"></i> Delete
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info text-center">
+                                <h4>No Shipments Found</h4>
+                                <p>There are currently no shipments in the system.</p>
+                                <a href="/Shipment/Create" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Create Your First Shipment
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shipments List End -->
+
+@section Scripts
+{
+    <script>
+        function confirmDelete(button) {
+            var id = $(button).data('id');
+            var tracking = $(button).data('tracking');
+            var deleteUrl = '/Shipment/Delete';
+
+            if (confirm('Are you sure you want to delete shipment "' + tracking + '"? This action cannot be undone.')) {
+                window.location.href = deleteUrl + '/' + id;
+            }
+        }
+
+        // Display message types
+        @if (TempData["MessageType"] != null)
+        {
+            <text>
+            $(document).ready(function () {
+                let messageType = @TempData["MessageType"];
+                
+                switch (messageType) {
+                    case 1: // SaveSuccess
+                        showBootstrapAlert('success', 'Success', 'Shipment saved successfully!');
+                        break;
+                    case 2: // SaveFailed
+                        showBootstrapAlert('danger', 'Error', 'Failed to save shipment.');
+                        break;
+                    case 3: // DeleteSuccess
+                        showBootstrapAlert('success', 'Success', 'Shipment deleted successfully!');
+                        break;
+                    case 4: // DeleteFailed
+                        showBootstrapAlert('danger', 'Error', 'Failed to delete shipment.');
+                        break;
+                    default:
+                        console.log("Unknown message type");
+                        break;
+                }
+            });
+
+            function showBootstrapAlert(type, title, message) {
+                var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    '<strong>' + title + ':</strong> ' + message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                    '</div>';
+                
+                $('.wshipping-content-block.shipping-block .container').prepend(alertHtml);
+                
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
+            }
+            </text>
+        }
+    </script>
+
+    <style>
+        .shipments-table {
+            font-size: 14px;
+        }
+        .shipments-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+        .btn-group .btn:last-child {
+            margin-right: 0;
+        }
+        .badge {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+        .card {
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 8px;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .heading2-border {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #007bff;
+            color: #333;
+        }
+    </style>
+}

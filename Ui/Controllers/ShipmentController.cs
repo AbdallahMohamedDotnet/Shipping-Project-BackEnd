@@ -12,9 +12,19 @@ namespace Ui.Controllers
             _logger = logger;
             _IShipment = iGenericRepository;
         }
+        
         public IActionResult Index()
         {
-            return View();
+            try
+            {
+                var shipments = _IShipment.GetAll();
+                return View(shipments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching shipments");
+                return View("Error");
+            }
         }
 
         public IActionResult Create()
@@ -41,7 +51,7 @@ namespace Ui.Controllers
         public IActionResult Delete(Guid id)
         {
             _IShipment.ChangeStatus(id,0);
-            return RedirectToAction("List");
+            return RedirectToAction("Index");
         }
     }
-} 
+}
