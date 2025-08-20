@@ -1,0 +1,1217 @@
+/* Site-wide Button Color Consistency and Dark Theme Support */
+
+/* =================================
+   GLOBAL BUTTON OVERRIDES 
+   ================================= */
+
+/* Primary buttons - use site's primary color */
+.btn-primary,
+.btn-primary:not(:disabled):not(.disabled) {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 8px var(--shadow-medium) !important;
+}
+
+/* Success buttons - maintain consistent green but adapt to theme */
+.btn-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+    color: #ffffff !important;
+}
+
+/* Info buttons */
+.btn-info {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+    background-color: #138496 !important;
+    border-color: #117a8b !important;
+    color: #ffffff !important;
+}
+
+/* Warning buttons */
+.btn-warning {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active {
+    background-color: #e0a800 !important;
+    border-color: #d39e00 !important;
+    color: #212529 !important;
+}
+
+/* Danger buttons */
+.btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    color: #ffffff !important;
+}
+
+/* Secondary buttons - adapt to theme */
+.btn-secondary {
+    background-color: var(--btn-secondary-bg) !important;
+    border-color: var(--btn-secondary-bg) !important;
+    color: var(--btn-secondary-text) !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active,
+.btn-secondary.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* Light buttons - adapt to theme */
+.btn-light {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active,
+.btn-light.active {
+    background-color: var(--bg-quaternary) !important;
+    border-color: var(--border-medium) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Dark buttons - adapt to theme */
+.btn-dark {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+}
+
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active,
+.btn-dark.active {
+    background-color: var(--text-secondary) !important;
+    border-color: var(--text-secondary) !important;
+    color: var(--bg-primary) !important;
+}
+
+/* =================================
+   COMPREHENSIVE FORM STYLING 
+   ================================= */
+
+/* Form Controls - Basic inputs, selects, textareas */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+select,
+textarea {
+    background-color: var(--form-bg) !important;
+    border: 1px solid var(--form-border) !important;
+    color: var(--form-text) !important;
+    border-radius: 4px !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.form-control:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+select:focus,
+textarea:focus {
+    background-color: var(--form-bg) !important;
+    border-color: var(--form-focus-border) !important;
+    color: var(--form-text) !important;
+    box-shadow: 0 0 0 0.2rem rgba(235, 0, 40, 0.25) !important;
+    outline: none !important;
+}
+
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: var(--form-placeholder) !important;
+    opacity: 0.7 !important;
+}
+
+/* Form Labels */
+.form-label,
+label {
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem !important;
+}
+
+.form-group label {
+    display: block !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Required field indicators */
+.form-group label sup,
+label sup {
+    color: var(--primary-color) !important;
+    font-weight: bold !important;
+}
+
+/* Select dropdown styling */
+select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.75rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1rem !important;
+    padding-right: 2.5rem !important;
+    appearance: none !important;
+}
+
+[data-theme="dark"] select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%9ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+
+/* Input Groups */
+.input-group {
+    position: relative !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+    width: 100% !important;
+}
+
+.input-group-text {
+    background-color: var(--bg-tertiary) !important;
+    border: 1px solid var(--form-border) !important;
+    color: var(--text-primary) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 4px !important;
+}
+
+.input-group .form-control {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0 !important;
+}
+
+.input-group .form-control:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group .form-control:not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Input Comment/Helper Text */
+.input-comment {
+    position: relative !important;
+}
+
+.field-comment {
+    position: absolute !important;
+    right: 1rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    pointer-events: none !important;
+}
+
+/* Form Validation */
+.form-control.is-valid {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.valid-feedback {
+    color: #28a745 !important;
+    font-size: 0.875rem !important;
+    margin-top: 0.25rem !important;
+}
+
+.invalid-feedback {
+    color: #dc3545 !important;
+    font-size: 0.875rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Error indicators */
+.error1,
+.error-log {
+    color: #dc3545 !important;
+}
+
+/* Checkbox and Radio buttons */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    margin-right: 0.5rem !important;
+    accent-color: var(--primary-color) !important;
+}
+
+.form-check {
+    display: block !important;
+    min-height: 1.5rem !important;
+    padding-left: 1.5rem !important;
+    margin-bottom: 0.125rem !important;
+}
+
+.form-check-input {
+    width: 1rem !important;
+    height: 1rem !important;
+    margin-top: 0.25rem !important;
+    vertical-align: top !important;
+    background-color: var(--form-bg) !important;
+    border: 1px solid var(--form-border) !important;
+    appearance: none !important;
+    color-adjust: exact !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.form-check-label {
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+}
+
+/* Custom checkbox styling */
+.css-checkbox {
+    display: none !important;
+}
+
+.css-checkbox + .css-label:before {
+    content: '' !important;
+    display: inline-block !important;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    margin-right: 0.5rem !important;
+    background-color: var(--form-bg) !important;
+    border: 2px solid var(--form-border) !important;
+    border-radius: 3px !important;
+    transition: all 0.2s ease !important;
+}
+
+.css-checkbox:checked + .css-label:before {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3e%3cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3e%3c/svg%3e") !important;
+    background-size: 0.8rem !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+.css-label {
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+/* Slide radio/checkbox */
+.slide-redio {
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.slide-label {
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+}
+
+/* Date picker groups */
+.datepicker-group {
+    position: relative !important;
+}
+
+.datepicker-icon {
+    position: absolute !important;
+    right: 1rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--text-secondary) !important;
+    pointer-events: none !important;
+}
+
+/* Form Text and Help Text */
+.form-text {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Disabled form controls */
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: var(--bg-quaternary) !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+/* =================================
+   SHIPPING FORM SPECIFIC STYLING 
+   ================================= */
+
+/* Shipping form container */
+.shipping-form {
+    background-color: var(--card-bg) !important;
+    padding: 2rem !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border-light) !important;
+    margin-bottom: 2rem !important;
+}
+
+.shipping-form-block {
+    background-color: var(--card-bg) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px var(--shadow-light) !important;
+    padding: 2rem !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Progress bar for multi-step forms */
+#progressbar {
+    margin-bottom: 2rem !important;
+    overflow: hidden !important;
+    background-color: var(--bg-secondary) !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    list-style: none !important;
+    display: flex !important;
+}
+
+#progressbar li {
+    list-style-type: none !important;
+    color: var(--text-secondary) !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    width: calc(100% / 7) !important;
+    float: left !important;
+    position: relative !important;
+    font-weight: 500 !important;
+    padding: 1rem 0.5rem !important;
+    text-align: center !important;
+    background-color: var(--bg-tertiary) !important;
+    border-right: 1px solid var(--border-light) !important;
+}
+
+#progressbar li.active {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+#progressbar li:last-child {
+    border-right: none !important;
+}
+
+/* Form titles and subtitles */
+.fs-title {
+    color: var(--text-primary) !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.fs-subtitle {
+    color: var(--text-secondary) !important;
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Login button in form */
+.login-btn-form {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.login-btn-form:hover {
+    color: var(--primary-dark) !important;
+    text-decoration: underline !important;
+}
+
+/* Ship address blocks */
+.ship-address {
+    background-color: var(--bg-secondary) !important;
+    padding: 1.5rem !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--border-light) !important;
+    margin-bottom: 1rem !important;
+}
+
+.ship-address h4 {
+    color: var(--text-primary) !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.ship-address p {
+    color: var(--text-secondary) !important;
+    margin-bottom: 0 !important;
+}
+
+.btn-edit {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    margin-left: 0.5rem !important;
+}
+
+.btn-edit:hover {
+    color: var(--primary-dark) !important;
+    text-decoration: underline !important;
+}
+
+/* Tab styling for forms */
+.nav-tabs {
+    border-bottom: 2px solid var(--border-light) !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.nav-tabs .nav-link {
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--text-secondary) !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 6px 6px 0 0 !important;
+    margin-bottom: -2px !important;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-light) var(--border-light) var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+}
+
+.tab-content {
+    background-color: var(--card-bg) !important;
+    padding: 1.5rem !important;
+    border-radius: 0 6px 6px 6px !important;
+    border: 1px solid var(--border-light) !important;
+    border-top: none !important;
+}
+
+.or-text {
+    color: var(--text-secondary) !important;
+    font-style: italic !important;
+    padding: 0.75rem 1rem !important;
+    align-self: center !important;
+}
+
+/* Review sections */
+.review {
+    background-color: var(--bg-secondary) !important;
+    padding: 1.5rem !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--border-light) !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.review h3,
+.review h4,
+.review h5 {
+    color: var(--text-primary) !important;
+    margin-bottom: 1rem !important;
+}
+
+.review p,
+.review ul,
+.review li {
+    color: var(--text-secondary) !important;
+}
+
+.review ul {
+    padding-left: 1.5rem !important;
+}
+
+.review b,
+.review strong {
+    color: var(--text-primary) !important;
+}
+
+/* Promo code input */
+.promoCode-input {
+    max-width: 300px !important;
+}
+
+/* Thanks message */
+.tanks-message {
+    color: var(--text-primary) !important;
+    text-align: center !important;
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+    margin: 3rem 0 !important;
+}
+
+/* =================================
+   OUTLINE BUTTON VARIANTS 
+   ================================= */
+
+/* Primary outline buttons */
+.btn-outline-primary {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* Secondary outline buttons */
+.btn-outline-secondary {
+    border-color: var(--border-medium) !important;
+    color: var(--text-primary) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active,
+.btn-outline-secondary.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* Success outline buttons */
+.btn-outline-success {
+    border-color: #28a745 !important;
+    color: #28a745 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active,
+.btn-outline-success.active {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+/* Info outline buttons */
+.btn-outline-info {
+    border-color: #17a2b8 !important;
+    color: #17a2b8 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-info:hover,
+.btn-outline-info:focus,
+.btn-outline-info:active,
+.btn-outline-info.active {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+/* Warning outline buttons */
+.btn-outline-warning {
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning:focus,
+.btn-outline-warning:active,
+.btn-outline-warning.active {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+/* Danger outline buttons */
+.btn-outline-danger {
+    border-color: #dc3545 !important;
+    color: #dc3545 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus,
+.btn-outline-danger:active,
+.btn-outline-danger.active {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+/* Light outline buttons */
+.btn-outline-light {
+    border-color: var(--border-light) !important;
+    color: var(--text-secondary) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus,
+.btn-outline-light:active,
+.btn-outline-light.active {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Dark outline buttons */
+.btn-outline-dark {
+    border-color: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-dark:hover,
+.btn-outline-dark:focus,
+.btn-outline-dark:active,
+.btn-outline-dark.active {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+}
+
+/* =================================
+   BUTTON SIZE AND STYLE ENHANCEMENTS 
+   ================================= */
+
+/* Add smooth transitions to all buttons */
+.btn {
+    transition: all 0.2s ease !important;
+    border-radius: 6px !important;
+}
+
+/* Button hover effects */
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--shadow-light) !important;
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Button focus states for accessibility */
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(235, 0, 40, 0.25) !important;
+    outline: none !important;
+}
+
+/* Small button adjustments */
+.btn-sm {
+    border-radius: 4px !important;
+}
+
+/* Large button adjustments */
+.btn-lg {
+    border-radius: 8px !important;
+}
+
+/* =================================
+   SITE-SPECIFIC BUTTON CLASSES 
+   ================================= */
+
+/* Custom site buttons that use primary color */
+.wshipping-button,
+.shipping-btn,
+.custom-btn {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.wshipping-button:hover,
+.wshipping-button:focus,
+.shipping-btn:hover,
+.shipping-btn:focus,
+.custom-btn:hover,
+.custom-btn:focus {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px var(--shadow-medium) !important;
+}
+
+/* Action buttons with consistent styling */
+.action-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid var(--primary-color) !important;
+    cursor: pointer !important;
+}
+
+.action-button:hover,
+.action-button:focus {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Red action buttons (cancel, etc.) */
+.action-button.btn-red {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.action-button.btn-red:hover,
+.action-button.btn-red:focus {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    color: #ffffff !important;
+}
+
+/* Previous/Next buttons */
+.previous,
+.next,
+.submit {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid var(--primary-color) !important;
+    cursor: pointer !important;
+    margin-right: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.previous:hover,
+.previous:focus,
+.next:hover,
+.next:focus,
+.submit:hover,
+.submit:focus {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* =================================
+   DARK THEME SPECIFIC OVERRIDES 
+   ================================= */
+
+[data-theme="dark"] .btn-warning {
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-warning:hover,
+[data-theme="dark"] .btn-warning:focus,
+[data-theme="dark"] .btn-warning:active,
+[data-theme="dark"] .btn-warning.active {
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-outline-warning {
+    color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-outline-warning:hover,
+[data-theme="dark"] .btn-outline-warning:focus,
+[data-theme="dark"] .btn-outline-warning:active,
+[data-theme="dark"] .btn-outline-warning.active {
+    color: #000000 !important;
+}
+
+/* Button group styling for dark theme */
+[data-theme="dark"] .btn-group .btn {
+    border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .btn-group .btn:not(:last-child) {
+    border-right-color: var(--border-light) !important;
+}
+
+/* Disabled button states for dark theme */
+[data-theme="dark"] .btn:disabled,
+[data-theme="dark"] .btn.disabled {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-tertiary) !important;
+    opacity: 0.6 !important;
+}
+
+/* Dark theme form-specific styling */
+[data-theme="dark"] .shipping-form {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .ship-address {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .review {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] #progressbar {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme="dark"] #progressbar li {
+    background-color: var(--bg-quaternary) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] #progressbar li.active {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* =================================
+   BUTTON LOADING STATES 
+   ================================= */
+
+.btn.loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+[data-theme="dark"] .btn-warning.loading::after {
+    border-color: #000000;
+    border-top-color: transparent;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =================================
+   RESPONSIVE BUTTON ADJUSTMENTS 
+   ================================= */
+
+@media (max-width: 768px) {
+    .btn {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 1.1rem !important;
+    }
+    
+    .action-button,
+    .previous,
+    .next,
+    .submit {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.9rem !important;
+        margin-right: 0.5rem !important;
+    }
+    
+    .shipping-form {
+        padding: 1rem !important;
+    }
+    
+    #progressbar li {
+        font-size: 0.7rem !important;
+        padding: 0.75rem 0.25rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .btn-group .btn {
+        padding: 0.3rem 0.6rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .action-button,
+    .previous,
+    .next,
+    .submit {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.85rem !important;
+        display: block !important;
+        width: 100% !important;
+        margin-right: 0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    #progressbar {
+        flex-direction: column !important;
+    }
+    
+    #progressbar li {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-light) !important;
+    }
+    
+    #progressbar li:last-child {
+        border-bottom: none !important;
+    }
+}
+
+/* =================================
+   ACCESSIBILITY IMPROVEMENTS 
+   ================================= */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn {
+        border-width: 2px !important;
+    }
+    
+    .btn:focus {
+        outline: 3px solid var(--primary-color) !important;
+        outline-offset: 2px !important;
+    }
+    
+    .form-control:focus {
+        outline: 2px solid var(--primary-color) !important;
+        outline-offset: 1px !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none !important;
+    }
+    
+    .btn:hover {
+        transform: none !important;
+    }
+    
+    .form-control {
+        transition: none !important;
+    }
+}
+
+/* =================================
+   PRINT STYLES 
+   ================================= */
+
+@media print {
+    .btn {
+        background-color: transparent !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+    
+    .btn-primary,
+    .btn-success,
+    .btn-info,
+    .btn-warning,
+    .btn-danger {
+        background-color: transparent !important;
+        color: #000000 !important;
+        border-color: #000000 !important;
+    }
+    
+    .form-control,
+    input,
+    select,
+    textarea {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #000000 !important;
+    }
+    
+    .shipping-form,
+    .ship-address,
+    .review {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #000000 !important;
+    }
+}
+
+/* =================================
+   INTEGRATION WITH EXISTING STYLES 
+   ================================= */
+
+/* Ensure custom site buttons work with theme */
+.wshipping-button:not(.wshipping-button:hover) {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+/* Form button styling */
+.form-control + .btn,
+.input-group .btn {
+    border-color: var(--form-border) !important;
+}
+
+[data-theme="dark"] .form-control + .btn,
+[data-theme="dark"] .input-group .btn {
+    border-color: var(--form-border) !important;
+}
+
+/* Dropdown button styling */
+.dropdown-toggle::after {
+    border-top-color: currentColor !important;
+}
+
+/* Button toolbar styling */
+.btn-toolbar .btn-group:not(:last-child) {
+    margin-right: 0.5rem;
+}
+
+/* Close button styling for modals/alerts */
+.btn-close {
+    background-color: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    opacity: 0.7 !important;
+}
+
+.btn-close:hover,
+.btn-close:focus {
+    opacity: 1 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Additional form elements styling */
+.what-package {
+    text-align: center !important;
+    padding: 2rem !important;
+}
+
+.what-package img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+/* Dropoff block styling */
+.dropoff-block h3 {
+    color: var(--text-primary) !important;
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1.5rem !important;
+}
