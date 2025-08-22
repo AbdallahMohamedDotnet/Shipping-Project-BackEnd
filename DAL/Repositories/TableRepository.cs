@@ -1,5 +1,6 @@
 ﻿using DAL.Contracts;
 using DAL.Exceptions;
+using DAL.Models;
 using Domains;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -156,6 +157,70 @@ namespace DAL.Repositories
             try
             {
                 return DbSet.Where(filter).AsNoTracking().ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException(ex, "", Logger);
+            }
+        }
+
+        public async Task<PagedResult<TResult>> GetPagedList<TResult>(
+       int pageNumber,
+       int pageSize,
+       Expression<Func<T, bool>>? filter = null,
+       Expression<Func<T, TResult>>? selector = null,
+       Expression<Func<T, object>>? orderBy = null,
+       bool isDescending = false,
+       params Expression<Func<T, object>>[] includers)
+        {
+            try
+            {
+                IQueryable<T> query = DbSet.AsQueryable();
+
+                // Apply includes
+                foreach (var include in includers)
+                    query = query.Include(include);
+
+                // Apply filter
+                if (filter != null)
+                    query = query.Where(filter);
+
+                // Total count before pagination
+                int totalCount = await query.CountAsync();
+
+                // Apply ordering
+                if (orderBy != null)
+                {
+                    query = isDescending
+                        ? query.OrderByDescending(orderBy)
+                        : query.OrderBy(orderBy);
+                }
+
+                query = query.AsNoTracking();
+
+                // Apply paging
+                query = query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
+
+                // Apply projection
+                List<TResult> items;
+                if (selector != null)
+                    items = await query.Select(selector).ToListAsync();
+                else
+                    items = await query.Cast<TResult>().ToListAsync();
+
+                // Calculate total pages
+                int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                return new PagedResult<TResult>
+                {
+                    Items = items,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    TotalPages = totalPages
+                };
             }
             catch (Exception ex)
             {
