@@ -53,9 +53,62 @@
         });
     },
 
+    put: function (url, data, onSuccess, onError, useAuth = true) {
+        const accessToken = AppHelper.getCookie("AccessToken");
+        const headers = useAuth && accessToken
+            ? { 'Authorization': 'Bearer ' + accessToken }
+            : {};
+
+        $.ajax({
+            url: this.baseUrl + url,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            headers: headers,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: onSuccess,
+            error: function (xhr) {
+                if (useAuth && xhr.status === 401) {
+                    ApiClient.refreshToken(() => {
+                        ApiClient.put(url, data, onSuccess, onError, useAuth);
+                    }, onError);
+                } else if (onError) {
+                    onError(xhr);
+                }
+            }
+        });
+    },
+
+    delete: function (url, onSuccess, onError, useAuth = true) {
+        const accessToken = AppHelper.getCookie("AccessToken");
+        const headers = useAuth && accessToken
+            ? { 'Authorization': 'Bearer ' + accessToken }
+            : {};
+
+        $.ajax({
+            url: this.baseUrl + url,
+            type: 'DELETE',
+            contentType: 'application/json',
+            headers: headers,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: onSuccess,
+            error: function (xhr) {
+                if (useAuth && xhr.status === 401) {
+                    ApiClient.refreshToken(() => {
+                        ApiClient.delete(url, onSuccess, onError, useAuth);
+                    }, onError);
+                } else if (onError) {
+                    onError(xhr);
+                }
+            }
+        });
+    },
+
     refreshToken: function (onSuccess, onFailure) {
-
-
         $.ajax({
             url: this.baseUrl + '/api/auth/RefreshAccessToken',
             type: 'POST',
