@@ -18,10 +18,12 @@ namespace WebApi
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.WithOrigins("https://localhost:7279") // 👈 Your MVC project URL
+                    policy.WithOrigins(
+                        "https://localhost:3001",  // Updated Ui HTTPS port
+                        "http://localhost:3000")   // Updated Ui HTTP port
                           .AllowAnyMethod()
                           .AllowAnyHeader()
-                          .AllowCredentials(); // 👈 Required for cookies (refresh token)
+                          .AllowCredentials();
                 });
             });
             
