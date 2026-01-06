@@ -1,5 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Access Denied";
 }
+
+<!-- Breadcroumbs start -->
+<div class="wshipping-content-block wshipping-breadcroumb inner-bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-7">
+                <h1>Access Denied</h1>
+                <a href="/" title="Home">Home</a> / Access Denied
+            </div>
+            <div class="col-12 col-lg-5 text-right">
+                <h4>
+                    You don't have permission to access this page
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcroumbs end -->
+
+<!-- Access Denied Content Start -->
+<div class="wshipping-content-block">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8 text-center">
+                <div class="access-denied-content">
+                    <i class="fa fa-lock" style="font-size: 120px; color: #eb0028; margin-bottom: 30px;"></i>
+                    <h2>Access Denied</h2>
+                    <p class="mb-4">
+                        Sorry, you don't have permission to access this resource. 
+                        Please contact your administrator if you believe this is an error.
+                    </p>
+                    <a href="/" class="wshipping-button">Go to Homepage</a>
+                    <a asp-controller="Account" asp-action="Login" class="wshipping-button" style="margin-left: 10px;">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Access Denied Content End -->
