@@ -58,14 +58,14 @@ namespace Ui.Services
             builder.Services.AddAuthorization();
 
             // Configure Serilog for logging
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.MSSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-                    tableName: "Log",
-                    autoCreateSqlTable: true)
-                .CreateLogger();
-            builder.Host.UseSerilog();
+            //Log.Logger = new LoggerConfiguration()
+            //    .WriteTo.Console()
+            //    .WriteTo.MSSqlServer(
+            //        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+            //        tableName: "Log",
+            //        autoCreateSqlTable: true)
+            //    .CreateLogger();
+            //builder.Host.UseSerilog();
 
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
@@ -87,6 +87,7 @@ namespace Ui.Services
             builder.Services.AddScoped<IUserReceiver, UserReceiverServices>();
 
             builder.Services.AddScoped<IShipment, ShipmentService>();
+            builder.Services.AddScoped<IShippmentStatus, ShippmentStatusServices>();
             builder.Services.AddScoped<ITrackingNumberCreator, TrackingNumberCreatorService>();
             builder.Services.AddScoped<IRateCalculator, RateCalculatorService>();
 

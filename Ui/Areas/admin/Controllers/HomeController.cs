@@ -26,8 +26,22 @@ namespace Ui.Areas.admin.Controllers
         {
             try
             {
-                var weatherData = await _apiClient.GetAsync<List<WeatherForecast>>("api/WeatherForecast");
-                return Json(new { success = true, data = weatherData });
+                var response = await _apiClient.GetAsync<dynamic>("api/WeatherForecast");
+                
+                // Check if the response is wrapped in ApiResponse
+                if (response?.data != null)
+                {
+                    return Json(new { success = true, data = response.data });
+                }
+                else if (response?.Data != null)
+                {
+                    return Json(new { success = true, data = response.Data });
+                }
+                else
+                {
+                    // If response is directly the data array
+                    return Json(new { success = true, data = response });
+                }
             }
             catch (Exception ex)
             {

@@ -56,10 +56,10 @@ namespace Ui
                 var dbContext = services.GetRequiredService<ShippingContext>();
 
                 // Apply migrations
-               // await dbContext.Database.MigrateAsync();
+                await dbContext.Database.MigrateAsync();
 
                 // Seed data
-              // await ContextConfig.SeedDataAsync(dbContext, userManager, roleManager);
+                // await ContextConfig.SeedDataAsync(dbContext, userManager, roleManager);
             }
 
             app.Run();

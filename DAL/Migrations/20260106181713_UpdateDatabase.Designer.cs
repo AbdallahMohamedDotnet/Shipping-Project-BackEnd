@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ShippingContext))]
-    partial class ShippingContextModelSnapshot : ModelSnapshot
+    [Migration("20260106181713_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +131,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbCarriers", (string)null);
+                    b.ToTable("TbCarriers");
                 });
 
             modelBuilder.Entity("Domains.TbCity", b =>
@@ -172,7 +175,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("TbCities", (string)null);
+                    b.ToTable("TbCities");
                 });
 
             modelBuilder.Entity("Domains.TbCountry", b =>
@@ -209,7 +212,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbCountries", (string)null);
+                    b.ToTable("TbCountries");
                 });
 
             modelBuilder.Entity("Domains.TbPaymentMethod", b =>
@@ -249,7 +252,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbPaymentMethods", (string)null);
+                    b.ToTable("TbPaymentMethods");
                 });
 
             modelBuilder.Entity("Domains.TbRefreshTokens", b =>
@@ -293,7 +296,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbRefreshTokens", (string)null);
+                    b.ToTable("TbRefreshTokens");
                 });
 
             modelBuilder.Entity("Domains.TbSetting", b =>
@@ -358,7 +361,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbShipingPackging", (string)null);
+                    b.ToTable("TbShipingPackging");
                 });
 
             modelBuilder.Entity("Domains.TbShipment", b =>
@@ -443,7 +446,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ShippingTypeId");
 
-                    b.ToTable("TbShippments", (string)null);
+                    b.ToTable("TbShippments");
                 });
 
             modelBuilder.Entity("Domains.TbShipmentStatus", b =>
@@ -523,7 +526,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbShippingTypes", (string)null);
+                    b.ToTable("TbShippingTypes");
                 });
 
             modelBuilder.Entity("Domains.TbSubscriptionPackage", b =>
@@ -564,7 +567,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TbSubscriptionPackages", (string)null);
+                    b.ToTable("TbSubscriptionPackages");
                 });
 
             modelBuilder.Entity("Domains.TbUserReceiver", b =>
@@ -631,7 +634,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("TbUserReceivers", (string)null);
+                    b.ToTable("TbUserReceivers");
                 });
 
             modelBuilder.Entity("Domains.TbUserSender", b =>
@@ -699,7 +702,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("TbUserSebders", (string)null);
+                    b.ToTable("TbUserSebders");
                 });
 
             modelBuilder.Entity("Domains.TbUserSubscription", b =>
@@ -737,7 +740,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("TbUserSubscriptions", (string)null);
+                    b.ToTable("TbUserSubscriptions");
                 });
 
             modelBuilder.Entity("Domains.VwCities", b =>

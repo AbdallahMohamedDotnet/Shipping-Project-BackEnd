@@ -11,7 +11,7 @@ namespace DAL
             var optionsBuilder = new DbContextOptionsBuilder<ShippingContext>();
             
             // Use the connection string directly for design-time operations
-            optionsBuilder.UseSqlServer("Server=abdallah;Database=Shipping;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=ENG-Abdallah\\ABDALLAH;Database=Shipping;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;");
 
             return new ShippingContext(optionsBuilder.Options);
         }
