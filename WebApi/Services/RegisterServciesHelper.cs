@@ -60,14 +60,14 @@ namespace WebApi.Services
             });
 
             // Configure Serilog for logging
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.MSSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-                    tableName: "Log",
-                    autoCreateSqlTable: true)
-                .CreateLogger();
-            builder.Host.UseSerilog();
+            //Log.Logger = new LoggerConfiguration()
+            //    .WriteTo.Console()
+            //    .WriteTo.MSSqlServer(
+            //        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+            //        tableName: "Log",
+            //        autoCreateSqlTable: true)
+            //    .CreateLogger();
+            //builder.Host.UseSerilog();
 
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
@@ -84,6 +84,9 @@ namespace WebApi.Services
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSingleton<TokenService>();
             builder.Services.AddScoped<IRefreshTokens, RefreshTokenService>();
+            
+            // Register Weather Forecast Service
+            builder.Services.AddScoped<IWeatherForecastService, WeatherForecastService>();
         }
     }
 }
