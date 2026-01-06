@@ -10,7 +10,7 @@ namespace WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class WeatherForecastController : ControllerBase
+    public partial class WeatherForecastController : ControllerBase
     {
         private readonly IWeatherForecastService _weatherService;
         private readonly ILogger<WeatherForecastController> _logger;
@@ -22,6 +22,24 @@ namespace WebApi.Controllers
             _weatherService = weatherService;
             _logger = logger;
         }
+
+        [LoggerMessage(Level = LogLevel.Warning, Message = "Invalid argument provided: {Message}")]
+        partial void LogInvalidArgument(string Message);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error fetching forecast for days: {Days}")]
+        partial void LogFetchError(Exception ex, int Days);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error fetching current weather")]
+        partial void LogCurrentWeatherError(Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error fetching forecast for specific date: {Date}")]
+        partial void LogDateFetchError(Exception ex, DateOnly Date);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error fetching forecast range")]
+        partial void LogRangeFetchError(Exception ex);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Error calculating statistics")]
+        partial void LogStatsError(Exception ex);
 
         /// <summary>
         /// Get weather forecast for multiple days
@@ -39,8 +57,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("GetWeatherForecast called with days: {Days}", days);
-
                 if (days < 1 || days > 30)
                 {
                     return BadRequest(ApiResponse<List<WeatherForecast>>.FailResponse(
@@ -56,14 +72,14 @@ namespace WebApi.Controllers
             }
             catch (ArgumentException argEx)
             {
-                _logger.LogWarning(argEx, "Invalid argument in GetWeatherForecast");
+                LogInvalidArgument(argEx.Message);
                 return BadRequest(ApiResponse<List<WeatherForecast>>.FailResponse(
                     "Invalid request",
                     new List<string> { argEx.Message }));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching weather forecast");
+                LogFetchError(ex, days);
                 return StatusCode(500, ApiResponse<List<WeatherForecast>>.FailResponse(
                     "An error occurred while fetching weather forecast",
                     new List<string> { ex.Message }));
@@ -83,8 +99,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("GetCurrentWeather called");
-
                 var weather = await _weatherService.GetCurrentWeatherAsync();
 
                 return Ok(ApiResponse<WeatherForecast>.SuccessResponse(
@@ -93,7 +107,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching current weather");
+                LogCurrentWeatherError(ex);
                 return StatusCode(500, ApiResponse<WeatherForecast>.FailResponse(
                     "An error occurred while fetching current weather",
                     new List<string> { ex.Message }));
@@ -116,8 +130,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("GetForecastByDate called with date: {Date}", date);
-
                 var forecast = await _weatherService.GetForecastByDateAsync(date);
 
                 if (forecast == null)
@@ -133,7 +145,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching weather for date: {Date}", date);
+                LogDateFetchError(ex, date);
                 return StatusCode(500, ApiResponse<WeatherForecast>.FailResponse(
                     "An error occurred while fetching weather forecast",
                     new List<string> { ex.Message }));
@@ -159,9 +171,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("GetForecastRange called with startDate: {StartDate}, endDate: {EndDate}", 
-                    startDate, endDate);
-
                 var forecasts = await _weatherService.GetForecastRangeAsync(startDate, endDate);
 
                 return Ok(ApiResponse<List<WeatherForecast>>.SuccessResponse(
@@ -170,14 +179,14 @@ namespace WebApi.Controllers
             }
             catch (ArgumentException argEx)
             {
-                _logger.LogWarning(argEx, "Invalid date range in GetForecastRange");
+                LogInvalidArgument(argEx.Message);
                 return BadRequest(ApiResponse<List<WeatherForecast>>.FailResponse(
                     "Invalid date range",
                     new List<string> { argEx.Message }));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching weather for date range");
+                LogRangeFetchError(ex);
                 return StatusCode(500, ApiResponse<List<WeatherForecast>>.FailResponse(
                     "An error occurred while fetching weather forecast",
                     new List<string> { ex.Message }));
@@ -200,8 +209,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("GetWeatherStatistics called with days: {Days}", days);
-
                 if (days < 1 || days > 30)
                 {
                     return BadRequest(ApiResponse<object>.FailResponse(
@@ -233,7 +240,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while calculating weather statistics");
+                LogStatsError(ex);
                 return StatusCode(500, ApiResponse<object>.FailResponse(
                     "An error occurred while calculating weather statistics",
                     new List<string> { ex.Message }));

@@ -8,7 +8,9 @@ using Domains;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Ui.Middleware;
 using Ui.Services;
+
 namespace Ui
 {
     public class Program
@@ -24,6 +26,20 @@ namespace Ui
 
             var app = builder.Build();
 
+            // Use global exception handler first (catches all unhandled exceptions)
+            app.UseGlobalExceptionHandler();
+
+            // Add Serilog request logging
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+                    diagnosticContext.Set("UserAgent", httpContext.Request.Headers.UserAgent.FirstOrDefault());
+                };
+            });
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -37,7 +53,11 @@ namespace Ui
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            // Add logging enrichment after authentication (so we have user context)
+            app.UseLoggingEnrichment();
 
             app.MapControllerRoute(
                 name: "admin",

@@ -1,0 +1,147 @@
+@{
+    ViewData["Title"] = "Logging Test Page";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-clipboard-check"></i> Advanced Logging Test Dashboard
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>@TempData["Message"]</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (ViewBag.CorrelationId != null)
+                    {
+                        <div class="alert alert-info">
+                            <strong>Correlation ID:</strong> <code>@ViewBag.CorrelationId</code>
+                        </div>
+                    }
+
+                    <h5 class="mb-4">Test Different Log Types</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="info" />
+                                <button type="submit" class="btn btn-info btn-lg">
+                                    <i class="fas fa-info-circle"></i> Test Information Log
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="warning" />
+                                <button type="submit" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-exclamation-triangle"></i> Test Warning Log
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="error" />
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-times-circle"></i> Test Error Log
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="performance" />
+                                <button type="submit" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-tachometer-alt"></i> Test Performance Log
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="shipment" />
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-box"></i> Test Shipment Log
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <form asp-action="TestLogging" method="post" class="d-grid">
+                                <input type="hidden" name="logType" value="exception" />
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    <i class="fas fa-bomb"></i> Test Exception Handler
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <h5 class="mb-3">Additional Tests</h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a asp-action="TestCorrelationId" class="btn btn-outline-primary btn-lg d-block">
+                                <i class="fas fa-link"></i> Test Correlation ID
+                            </a>
+                        </div>
+
+                        <div class="col-md-6">
+                            <a href="/api/logtest/exception" class="btn btn-outline-danger btn-lg d-block">
+                                <i class="fas fa-code"></i> Test API Exception (JSON)
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-database"></i> Check Database Table</h6>
+                        <p class="mb-0">
+                            All logs are being written to: <strong>ApplicationLogs</strong> table<br />
+                            Query: <code>SELECT TOP 10 * FROM ApplicationLogs ORDER BY TimeStamp DESC</code>
+                        </p>
+                    </div>
+
+                    <div class="alert alert-secondary">
+                        <h6><i class="fas fa-list"></i> Log Features Tested</h6>
+                        <ul class="mb-0">
+                            <li>✅ Structured logging with [LoggerMessage]</li>
+                            <li>✅ User context enrichment (UserId, UserName)</li>
+                            <li>✅ Request context (Path, Method, ClientIP)</li>
+                            <li>✅ Correlation ID propagation</li>
+                            <li>✅ Global exception handler</li>
+                            <li>✅ SQL Server sink with custom columns</li>
+                            <li>✅ Console output</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="https://localhost:7048/swagger" target="_blank" class="btn btn-link">
+                    <i class="fas fa-external-link-alt"></i> Test WebApi Logging
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

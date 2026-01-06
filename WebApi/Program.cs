@@ -1,11 +1,11 @@
-﻿
-using BL.Mapping;
+﻿using BL.Mapping;
 using DAL;
 using DAL.UserModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebApi.Services;
+
 namespace WebApi
 {
     public class Program
@@ -13,6 +13,7 @@ namespace WebApi
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
@@ -23,9 +24,10 @@ namespace WebApi
                           .AllowCredentials(); // 👈 Required for cookies (refresh token)
                 });
             });
+            
             // Add services to the container.
-
             builder.Services.AddControllers();
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -35,8 +37,19 @@ namespace WebApi
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
-
             var app = builder.Build();
+
+            // Add Serilog request logging
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+                    diagnosticContext.Set("UserAgent", httpContext.Request.Headers.UserAgent.FirstOrDefault());
+                    diagnosticContext.Set("ClientIP", httpContext.Connection.RemoteIpAddress?.ToString());
+                };
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -49,7 +62,6 @@ namespace WebApi
             app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
